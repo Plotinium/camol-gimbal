@@ -3,15 +3,7 @@
 Stato al 2026-11-26. Regole lette quel giorno; i percorsi dei pulsanti sui siti **non sono stati
 verificati**.
 
-## 1. Caricare su GitHub le modifiche
-
-```
-git push
-```
-
-Aggiorna il repository pubblico con la dichiarazione sull'IA, il nuovo disegno e questa lista.
-
-## 2. Disegno e prove
+## 1. Disegno e prove
 
 - [ ] Guarda in gioco il disegno del Camol Gimbal. Per ritoccarlo, file e programmi sono in
       [sviluppo.md](sviluppo.md). Se in futuro vuoi Modrinth, parti da un foglio vuoto: un disegno
@@ -20,13 +12,13 @@ Aggiorna il repository pubblico con la dichiarazione sull'IA, il nuovo disegno e
 - [ ] Un server dedicato (sezione "Da provare su server"). In alternativa pubblica la 0.1.0 come beta,
       dicendo nella descrizione che non è provata su server.
 
-## 3. Scrivere all'autore di Camol
+## 2. Scrivere all'autore di Camol
 
 - [ ] Manda la [proposta](proposta.md). Nel testo c'è già la domanda sul disegno ispirato al suo:
       aggiungi quella sul nome "Camol Gimbal". Camol ha tutti i diritti riservati, e CurseForge chiede
       nome e icona distinti e senza immagini protette: **aspetta la risposta prima di pubblicare**.
 
-## 4. CurseForge
+## 3. CurseForge
 
 - [ ] Crea il file: `.\gradlew.bat build`, poi prendi `build\libs\camolgimbal-1.21.1-0.1.0.jar`.
 - [ ] Crea il progetto con: nome "Camol Gimbal"; riassunto "A tool that turns and reshapes Camol
@@ -44,7 +36,7 @@ obbligo trovato sull'IA è un avviso sulle immagini modificate con IA che posson
 della mod. La dichiarazione nella descrizione va oltre quell'obbligo. Non è stata letta ogni altra
 regola del sito.
 
-## 5. Modrinth
+## 4. Modrinth
 
 **Così com'è il progetto non rientra nelle regole**
 ([punto 6](https://modrinth.com/legal/rules)): sono vietati i progetti composti interamente o
@@ -63,7 +55,7 @@ in cui la persona ha contribuito "in modo primario e significativo"
   - Camol non risulta su Modrinth: mettilo nella descrizione con il collegamento a CurseForge.
 - [ ] Se la risposta è no, pubblica solo dove le regole lo permettono.
 
-## 6. Legge europea sull'IA (AI Act)
+## 5. Legge europea sull'IA (AI Act)
 
 Lettura del testo ufficiale del Regolamento (UE) 2024/1689
 ([EUR-Lex](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32024R1689)), il

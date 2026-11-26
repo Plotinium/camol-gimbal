@@ -36,17 +36,19 @@ La lista di cosa controllare in gioco è in [prove.md](prove.md).
 | `src\main\resources\camolgimbal_logo.png` | 512x512 | l'immagine nell'elenco delle mod |
 | `docs\publish\icon-400.png` | 400x400 | l'icona per CurseForge |
 
-I disegni da usare come riferimento o da cui ripartire stanno in `docs\art\`. In ogni cartella:
-`gimbal.png` (32x32, quello da modificare), `preview.png` (ingrandito su grigio, solo da guardare) e
-`draw.py` (il programma che lo ha generato: non serve per disegnare a mano).
+I disegni da usare come riferimento o da cui ripartire stanno in `docs\art\`. In ogni cartella ci sono
+`gimbal.png` (32x32, quello da modificare) e `preview.png` (ingrandito su grigio, solo da guardare);
+dove c'è anche `draw.py`, è il programma che ha generato quel disegno e non serve per disegnare a mano.
 
 | Cartella | Disegno |
 |---|---|
 | `docs\art\1-rod` | asta con anello aperto |
 | `docs\art\2-tongs` | pinza con le due ganasce, non in linea |
-| `docs\art\3-tongs-aligned` | pinza in linea, con la sola ganascia davanti: **è quella usata dalla mod** |
+| `docs\art\3-tongs-aligned` | pinza in linea, con la sola ganascia davanti |
+| `docs\art\4-final` | pinza in linea, con l'attacco della ganascia dietro in vista a sinistra: **è quella usata dalla mod** |
 
-Per usarne un altro nel gioco, copia il suo `gimbal.png` sopra il primo file della tabella.
+Per usarne un altro nel gioco, copia il suo `gimbal.png` sopra il primo file della prima tabella. Le
+due immagini più grandi vanno poi rifatte con lo stesso disegno.
 
 Programmi per disegnare a pixel (prezzi non verificati): Piskel (gratuito, nel browser), Pixelorama
 o LibreSprite (gratuiti), Aseprite (a pagamento), Blockbench (gratuito, mostra anche l'oggetto in
