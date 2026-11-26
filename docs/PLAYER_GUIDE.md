@@ -40,6 +40,7 @@ without a camo, to change your saved copy.
 
 - The list on the left shows every state of the block and its value. Click a row, or use the mouse
   wheel, to pick the one the wheel in the middle shows.
+- The menu reopens on the state you picked last. On a block without it, it shows the first one.
 - Left click a value in the wheel to apply it. The menu stays open for the next change.
 - Holding Alt: point at a value and release the key to apply it and close.
 - Right click or Esc closes.

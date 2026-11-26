@@ -40,7 +40,9 @@ contains:
 
 Based on the logic of Create's radial wrench menu: the wheel shows the values of one state, each with
 a 3D preview. A list beside the wheel shows every state with its current value; a click on the list,
-or the mouse wheel, picks which state the wheel shows.
+or the mouse wheel, picks which state the wheel shows. The menu reopens on the state picked last,
+also on another block that has it; on a block without it, on the first one, without forgetting the
+pick.
 
 - **Rejected:** one state at a time with the others reachable only by the mouse wheel (they go
   unnoticed); a list with a button for each value and no wheel (long for blocks with many values); a

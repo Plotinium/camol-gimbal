@@ -80,7 +80,7 @@ final class MainPage extends MenuPage {
 
     private void buildList(int x, int width, int height, Consumer<AbstractWidget> add) {
         shownRows = Math.min(states.size(), (height - MARGIN - HOTBAR - 2 * PADDING) / ROW_HEIGHT);
-        int selected = screen.selectedState(states.size());
+        int selected = screen.selectedState(states);
         // The list follows the selection.
         firstRow = Mth.clamp(screen.firstRow(), Math.max(0, selected - shownRows + 1),
                 Math.min(selected, states.size() - shownRows));
@@ -184,7 +184,7 @@ final class MainPage extends MenuPage {
                     wheel.centreY() - font.lineHeight / 2, DIM_TEXT);
             return;
         }
-        Property<?> property = states.get(screen.selectedState(states.size()));
+        Property<?> property = states.get(screen.selectedState(states));
         List<BlockState> values = RadialWheel.valuesOf(state, property);
         int selected = sectorAt(mouseX, mouseY, values.size());
 
@@ -209,7 +209,7 @@ final class MainPage extends MenuPage {
         if (state == null || states.isEmpty()) {
             return false;
         }
-        Property<?> property = states.get(screen.selectedState(states.size()));
+        Property<?> property = states.get(screen.selectedState(states));
         // The block can change between two frames, before the page is built again.
         if (!state.hasProperty(property)) {
             return false;
@@ -228,7 +228,7 @@ final class MainPage extends MenuPage {
     @Override
     void scroll(int step) {
         if (!states.isEmpty()) {
-            screen.selectState(Mth.clamp(screen.selectedState(states.size()) + step, 0, states.size() - 1));
+            screen.selectState(states.get(Mth.clamp(screen.selectedState(states) + step, 0, states.size() - 1)));
         }
     }
 
@@ -241,7 +241,7 @@ final class MainPage extends MenuPage {
 
         private StateRow(int x, int y, int width, int index) {
             super(x, y, width, ROW_HEIGHT, StateText.name(states.get(index)),
-                    button -> screen.selectState(index), DEFAULT_NARRATION);
+                    button -> screen.selectState(states.get(index)), DEFAULT_NARRATION);
             this.index = index;
         }
 
@@ -259,7 +259,7 @@ final class MainPage extends MenuPage {
 
         @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-            boolean selected = index == screen.selectedState(states.size());
+            boolean selected = index == screen.selectedState(states);
             if (selected) {
                 graphics.fill(getX(), getY(), getRight(), getBottom(), HIGHLIGHT_FILL);
             } else if (isHoveredOrFocused()) {

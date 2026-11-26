@@ -10,6 +10,7 @@ package plotinium.camolgimbal.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import cy.jdkdigital.camol.utils.CamoPosition;
+import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,9 +18,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import org.lwjgl.glfw.GLFW;
 import plotinium.camolgimbal.data.GimbalSettings;
+import plotinium.camolgimbal.rules.PickedState;
 
 /**
  * The Gimbal menu (D-18): the main page, the settings page and the list of states to paste.
@@ -33,6 +36,10 @@ public final class GimbalMenuScreen extends Screen {
         MAIN, SETTINGS, STATES
     }
 
+    /** The name of the state the player picked last; kept from one menu to the next while the game runs. */
+    @Nullable
+    private static String pickedState;
+
     private final MenuState data;
     private boolean held;
     private Page page = Page.MAIN;
@@ -41,7 +48,6 @@ public final class GimbalMenuScreen extends Screen {
     /** What the widgets were built from; a change of it builds them again before the next frame. */
     @Nullable
     private Built built;
-    private int selectedState;
     private int firstRow;
     private int firstTick;
 
@@ -76,12 +82,12 @@ public final class GimbalMenuScreen extends Screen {
     }
 
     /** The state the wheel shows, as an index into the states offered. */
-    int selectedState(int states) {
-        return Math.max(0, Math.min(states - 1, selectedState));
+    int selectedState(List<Property<?>> offered) {
+        return PickedState.indexIn(offered, pickedState);
     }
 
-    void selectState(int index) {
-        selectedState = index;
+    void selectState(Property<?> state) {
+        pickedState = state.getName();
         built = null;
     }
 

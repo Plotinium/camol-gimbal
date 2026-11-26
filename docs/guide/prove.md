@@ -188,7 +188,9 @@ ha lo stesso tasto si apre il suo menu.
 ### La pagina principale
 
 1. A sinistra l'elenco di tutte le voci con il valore di adesso; quella scelta è gialla. Un clic su una
-   riga, o la rotella del mouse, cambia la voce mostrata dalla ruota.
+   riga, o la rotella del mouse, cambia la voce mostrata dalla ruota. Scegli «Aperta» su una botola,
+   chiudi e riapri: resta su «Aperta». Apri il menu su un tronco: mostra la sua prima voce. Torna
+   sulla botola senza aver scelto niente sul tronco: è ancora su «Aperta».
 2. Al centro della ruota: il nome della voce e il valore indicato dal mouse (o quello di adesso). Le
    direzioni stanno come su una bussola: nord in alto, est a destra, sud in basso, ovest a sinistra.
 3. Ogni spicchio mostra il blocco in 3D con quel valore, girato come lo vedi tu. L'anello chiaro segna
