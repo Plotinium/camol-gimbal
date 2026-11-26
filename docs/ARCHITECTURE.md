@@ -17,9 +17,15 @@ Two data components, persistent and synced:
 
 They read the world through `CamoView` (camo at a position, or none) plus the level; the server reads
 chunk data (`isLoaded`, then `hasData` before `getData`, so they never load a chunk or create the
-attachment), the client `CamoHelper.CLIENT_CAMO_MAP`. They spend nothing, write nothing and check no
-permission. Entry points for the preview: `CamoView` (a lambda over the client map) and
+attachment), the client `CamoHelper.CLIENT_CAMO_MAP` (`client.ClientCamos.VIEW`). They spend nothing,
+write nothing and check no permission. Entry points for the preview: `CamoView` and
 `Planner.plan(level, view, player, copy, settings, hit, look, series)`.
+
+- `VisibleStates`: the states the menu and the label offer (D-1), given a function that says how a
+  block state looks: a state is offered when two block states differing only in it look different;
+  never `waterlogged`. Per state, all groups of block states are compared when there are few
+  (`LOOKS_PER_STATE / values`, at least 32), else the default state's group and a fixed pseudo-random
+  sample, so a difference outside the sample is missed.
 
 - `Selection`: the blocks of a series (D-11), breadth first from the clicked block, nearest first, up
   to the limit, loaded positions only. "Same kind" is the camo block where the origin has a camo;
@@ -99,15 +105,42 @@ permission. Entry points for the preview: `CamoView` (a lambda over the client m
   `KeyMappingLookup.getAll` of the NeoForge 21.1.251 sources, not tried in game). A narrower context would not help: a context that
   does not conflict with `IN_GAME` makes `KeyModifier.NONE` inactive while Ctrl or Alt is down, and
   the mapping is never down. While a screen is open the mappings are inactive, so the menu screen
-  matches the menu key in `keyReleased`.
+  matches the menu key itself (`matches`, `matchesMouse`).
 - The series state is polled in `ClientTickEvent.Pre`, before the tick's use packet, and sent on
   change; a screen opening releases it, and logging out resets it.
-- The menu key, on each click, calls `MenuHook.open` with the main hand Gimbal, else the off hand,
-  and the targeted block or null. The menu opens client side.
+- The menu key opens the menu in held mode (`GimbalMenuScreen.open(hit, true)`) at the end of the
+  client tick, only after a real press seen with no screen open: a key held after the menu closed
+  repeats, and Minecraft counts each repeat as a click. `MenuHook` (Shift and right click) opens it
+  to stay open.
 - The label (`client.CamoLabel`, a GUI layer above the crosshair): with a Gimbal in either hand and
-  the crosshair on a camo, the camo block, its type with Camol's item names, and its states except
-  `waterlogged`, with the addon's translations of state names and values where it has one. Hidden
-  with F1 and while a screen is open.
+  the crosshair on a camo, the camo block, its type with Camol's item names, and the offered states,
+  with the addon's translations of state names and values where it has one. Hidden with F1 and while
+  a screen is open.
+
+## Menu and preview (`client`)
+
+- `GimbalMenuScreen` (adapted from Create, see `THIRD_PARTY_NOTICES.md`): the target is fixed at
+  opening, the camo in front or else the saved copy; the states are read live. It closes without a
+  Gimbal in hand, or when the target camo disappears or changes block. A packet goes only for a
+  sector whose value differs from the current one.
+- Held mode closes on `keyReleased` or `mouseReleased` of the menu key, and a tick polls GLFW for a
+  release that happened before the screen opened. A release applies nothing while the window is not
+  active (GLFW releases every key on focus loss) or before the mouse has moved since the opening.
+- `RadialWheel`: sectors in `RenderType.gui()`, previews with `BlockPreview`
+  (`BlockRenderDispatcher.renderSingleBlock`). The wheel is at the screen centre when it fits beside
+  the panel; else it moves left and the cursor is put on its centre (`glfwSetCursorPos`).
+- `GimbalPanel`: the copy, the clear button and the switches. Which Gimbal: the main hand else the
+  off hand, as the server. A change is sent at once and written on the client's stack too; from then
+  on the panel shows its own value, so an older update from the server changes nothing on screen. The
+  copy is read from the stack until it is cleared in this screen. A resize rebuilds from these.
+- `BlockLooks`: how a state looks for `VisibleStates` (render shape, quads per render type with seed
+  42, tint without a world, outline and collision shapes), cached per block, cleared on resource
+  reload. A block that throws keeps its states offered.
+- `GimbalPreview`: once per client tick it runs `Planner.plan` for the Gimbal a right click would use
+  (main hand, or off hand with an empty main hand), when the switch is on, a block is targeted, not
+  sneaking, no screen open. Drawn at `AFTER_TRANSLUCENT_BLOCKS` with
+  `ModelBlockRenderer.tesselateWithoutAO` into `RenderType.translucentMovingBlock`, scaled 1.01
+  (Camol draws at 1.005), full light, reduced alpha. It ignores claims and the items carried.
 
 ## Mixins
 

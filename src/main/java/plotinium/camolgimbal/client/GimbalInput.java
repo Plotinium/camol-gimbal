@@ -15,7 +15,6 @@ import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 import plotinium.camolgimbal.CamolGimbal;
-import plotinium.camolgimbal.item.MenuHook;
 import plotinium.camolgimbal.net.LeftClickPayload;
 import plotinium.camolgimbal.net.SeriesKeyPayload;
 import plotinium.camolgimbal.registry.ModRegistry;
@@ -30,10 +29,14 @@ import plotinium.camolgimbal.registry.ModRegistry;
  * spends. Holding the button sends nothing more, and neither does closing a screen with the button held, where
  * {@code MouseHandler.grabMouse} sets the binding down again without a press. Entities and the air are left to
  * vanilla.
+ *
+ * <p>Menu key: only a real press, seen with no screen open, opens the menu. A key held after the menu closed keeps
+ * repeating, and each repeat counts as a click for Minecraft.
  */
 @EventBusSubscriber(modid = CamolGimbal.MOD_ID, value = Dist.CLIENT)
 public final class GimbalInput {
     private static boolean pressArmed;
+    private static boolean menuArmed;
     private static boolean seriesSent;
 
     private GimbalInput() {
@@ -41,17 +44,25 @@ public final class GimbalInput {
 
     @SubscribeEvent
     public static void onMouseButton(InputEvent.MouseButton.Pre event) {
-        if (event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null
-                && Minecraft.getInstance().options.keyAttack.matchesMouse(event.getButton())) {
-            pressArmed = true;
+        if (event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            if (Minecraft.getInstance().options.keyAttack.matchesMouse(event.getButton())) {
+                pressArmed = true;
+            }
+            if (GimbalKeys.MENU.matchesMouse(event.getButton())) {
+                menuArmed = true;
+            }
         }
     }
 
     @SubscribeEvent
     public static void onKey(InputEvent.Key event) {
-        if (event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null
-                && Minecraft.getInstance().options.keyAttack.matches(event.getKey(), event.getScanCode())) {
-            pressArmed = true;
+        if (event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
+            if (Minecraft.getInstance().options.keyAttack.matches(event.getKey(), event.getScanCode())) {
+                pressArmed = true;
+            }
+            if (GimbalKeys.MENU.matches(event.getKey(), event.getScanCode())) {
+                menuArmed = true;
+            }
         }
     }
 
@@ -92,14 +103,13 @@ public final class GimbalInput {
         pressArmed = false;
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
+        boolean pressed = menuArmed;
+        menuArmed = false;
         while (GimbalKeys.MENU.consumeClick()) {
-            if (player == null || minecraft.screen != null) {
-                continue;
-            }
-            InteractionHand hand = gimbalHand(player);
-            if (hand != null) {
-                MenuHook.open(hand, minecraft.hitResult instanceof BlockHitResult hit
-                        && hit.getType() == HitResult.Type.BLOCK ? hit : null);
+            if (pressed && player != null) {
+                // Does nothing without a Gimbal in hand or with a screen already open.
+                GimbalMenuScreen.open(minecraft.hitResult instanceof BlockHitResult hit
+                        && hit.getType() == HitResult.Type.BLOCK ? hit : null, true);
             }
         }
     }
@@ -108,6 +118,7 @@ public final class GimbalInput {
     public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         seriesSent = false;
         pressArmed = false;
+        menuArmed = false;
     }
 
     /** The main hand if it holds a Gimbal, else the off hand, else none. */

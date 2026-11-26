@@ -11,7 +11,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -20,8 +19,8 @@ import plotinium.camolgimbal.registry.ModRegistry;
 
 /**
  * The label under the crosshair while a Gimbal is held and the crosshair is on a camouflage: the camo block, its type
- * with Camol's own item names, and its states. State names and values use the addon's translations when it has one,
- * the plain name otherwise. {@code waterlogged} is left out: the camo draws no water.
+ * with Camol's own item names, and the states the Gimbal offers ({@link BlockLooks}). State names and values use the
+ * addon's translations when it has one, the plain name otherwise.
  */
 public final class CamoLabel {
     private static final int COLOR = 0xFFFFFF;
@@ -57,21 +56,26 @@ public final class CamoLabel {
         BlockState state = camo.state();
         List<Component> lines = new ArrayList<>();
         lines.add(state.getBlock().getName());
-        lines.add(Component.translatable(SavedCopy.SOLID.equals(camo.camoType())
-                ? "item.camol.solid_camo_item" : "item.camol.camo_item"));
-        for (Property<?> property : state.getProperties()) {
-            if (property != BlockStateProperties.WATERLOGGED) {
-                lines.add(stateLine(state, property));
-            }
+        lines.add(typeName(camo.camoType()));
+        for (Property<?> property : BlockLooks.visibleStates(state.getBlock())) {
+            lines.add(Component.translatable("label.camolgimbal.state", stateName(property),
+                    valueName(state, property)));
         }
         return lines;
     }
 
-    private static <T extends Comparable<T>> Component stateLine(BlockState state, Property<T> property) {
+    static Component stateName(Property<?> property) {
         String name = property.getName();
+        return Component.translatableWithFallback("state.camolgimbal." + name, name);
+    }
+
+    static <T extends Comparable<T>> Component valueName(BlockState state, Property<T> property) {
         String value = property.getName(state.getValue(property));
-        return Component.translatable("label.camolgimbal.state",
-                Component.translatableWithFallback("state.camolgimbal." + name, name),
-                Component.translatableWithFallback("state.camolgimbal.value." + value, value));
+        return Component.translatableWithFallback("state.camolgimbal.value." + value, value);
+    }
+
+    static Component typeName(String camoType) {
+        return Component.translatable(SavedCopy.SOLID.equals(camoType)
+                ? "item.camol.solid_camo_item" : "item.camol.camo_item");
     }
 }
