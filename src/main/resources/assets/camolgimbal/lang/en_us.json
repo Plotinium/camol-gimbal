@@ -1,3 +1,10 @@
 {
-  "item.camolgimbal.gimbal": "Gimbal"
+  "item.camolgimbal.gimbal": "Gimbal",
+  "message.camolgimbal.nothing_copied": "Nothing copied yet: left click a camouflaged block first",
+  "message.camolgimbal.nothing_to_copy": "There is no camouflage to copy here",
+  "message.camolgimbal.no_camo": "There is no camouflage here",
+  "message.camolgimbal.items_missing": "Missing: %1$s with %2$s, or an empty %1$s and one %2$s",
+  "message.camolgimbal.series_stopped": "Blocks changed: %s. You ran out of items",
+  "message.camolgimbal.refused": "You cannot change this block",
+  "message.camolgimbal.refused_some": "Skipped: %s. You cannot change those blocks"
 }
