@@ -10,7 +10,7 @@
   "key.categories.camolgimbal": "Camol Gimbal",
   "key.camolgimbal.menu": "Menu del Gimbal (tieni premuto)",
   "key.camolgimbal.series": "Gimbal: più blocchi (tieni premuto)",
-  "camolgimbal.configuration.followClickedFace": "I camo seguono la faccia cliccata",
+  "camolgimbal.configuration.followClickedFace": "I Camo Block seguono la faccia cliccata",
   "label.camolgimbal.state": "%s: %s",
   "state.camolgimbal.facing": "Direzione",
   "state.camolgimbal.axis": "Asse",

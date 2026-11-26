@@ -6,6 +6,8 @@ can stand upright, a log can lie on any axis.
 
 Camol is required and is not included. License: MIT (see `LICENSE`).
 
+How to use it: [player guide](docs/PLAYER_GUIDE.md).
+
 ## Build
 
 ```
