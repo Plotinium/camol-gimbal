@@ -73,4 +73,7 @@ Place a camo as usual, adjust it with the Gimbal, then copy it.
 
 - Chests, signs, beds, banners and heads show nothing when used as a camo.
 - A trapdoor placed vertically is its open state: set it from the menu.
-- With the Gimbal in the off hand and an empty main hand, doors and levers react to the click.
+- From the off hand, a block's own action comes first: doors, levers and machines react to the
+  right click. The preview shows only with the Gimbal in the main hand.
+- Other mods may count a change made with the Gimbal as a block placed by you.
+- The first time you look at a very complex block, the game can pause for a moment.

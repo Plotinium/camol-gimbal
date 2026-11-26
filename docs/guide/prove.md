@@ -85,6 +85,9 @@ In sopravvivenza e poi in creativa, con il Gimbal nella mano principale:
 5. Apri l'inventario tenendo premuto il tasto sinistro, chiudilo senza lasciarlo: non deve partire una
    copia.
 6. Clic sinistro su un mob o un animale: lo colpisci come con la mano.
+7. In sopravvivenza, clic sinistro nel vuoto e subito dopo su un blocco camuffato: la copia riesce.
+8. Premi il tasto sinistro nel vuoto e, tenendolo premuto, sposta il mirino su un blocco camuffato:
+   non succede niente.
 
 ### Applicare (clic destro)
 
@@ -94,7 +97,8 @@ In sopravvivenza e poi in creativa, con il Gimbal nella mano principale:
 2. Senza niente in inventario, clic destro su un'altra pietra: non cambia niente, e sulla barra in basso
    compare cosa manca.
 3. Clic destro su una leva: la leva prende la camo e non si abbassa. Vale con il Gimbal nella mano
-   principale; con il Gimbal nell'altra mano e la principale vuota, la leva si abbassa.
+   principale; con il Gimbal nell'altra mano la leva si abbassa, ed è voluto: dall'altra mano viene
+   prima l'azione del blocco.
 4. In creativa, tieni Ctrl e fai clic destro su una fila di pietre staccata dal terreno (niente altra
    pietra che la tocca): prendono tutte la camo, fino a 64.
 5. Nella prova con `.\gradlew.bat runClient` la spugna non accetta camo: lo vuole una prova
@@ -213,10 +217,10 @@ Con una copia salvata e «Anteprima» su Sì, guarda un blocco con il Gimbal nel
    togliendo il Gimbal di mano e dopo «Cancella copia».
 5. Su un blocco dove il clic non cambierebbe niente (la stessa camo con gli stessi valori) non compare
    niente.
-6. Con il Gimbal nell'altra mano e la principale vuota l'anteprima c'è; con un oggetto nella
-   principale no.
-7. L'anteprima non tiene conto degli oggetti che hai e delle zone protette: può mostrare blocchi che
-   al clic non cambiano, perché mancano gli oggetti o il blocco non è tuo.
+6. Con il Gimbal nell'altra mano l'anteprima non c'è.
+7. In sopravvivenza, con Ctrl su una fila di 5 pietre e solo 2 Camo Block pieni in inventario,
+   l'anteprima copre 2 blocchi, e il clic ne cambia 2. Non tiene conto delle zone protette: può
+   mostrare un blocco che al clic non cambia perché non è tuo.
 8. Guardala di giorno, di notte, dentro l'acqua e attraverso il vetro, poi con Opzioni, Grafica,
    «Grafica» su «Sofisticata» e su «Favolosa!»: si deve vedere, senza sfarfallii. Con «Camo
    trasparenti» sia su Sì sia su No.

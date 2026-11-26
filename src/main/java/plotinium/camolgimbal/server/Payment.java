@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import plotinium.camolgimbal.data.SavedCopy;
+import plotinium.camolgimbal.rules.Planner;
 
 /**
  * What a new camouflage costs (D-17), taken from the main inventory and the off hand. In order: a filled camo item of
@@ -30,7 +31,11 @@ public final class Payment {
     /** The stacks that pay for one camouflage of {@code block} with camo {@code type}, or null if they are missing. */
     @Nullable
     public static Payment find(Player player, Block block, String type) {
-        List<ItemStack> inventory = carried(player.getInventory());
+        return find(carried(player.getInventory()), block, type);
+    }
+
+    @Nullable
+    private static Payment find(List<ItemStack> inventory, Block block, String type) {
         Item own = camoItem(type);
         Item other = camoItem(SavedCopy.SOLID.equals(type) ? SavedCopy.NORMAL : SavedCopy.SOLID);
 
@@ -51,6 +56,35 @@ public final class Payment {
             }
         }
         return null;
+    }
+
+    /**
+     * How many of the planned changes, in order, the player's items pay for: the preview stops there, as the server
+     * does. It spends copies of the carried stacks with the same {@link #find} and {@link #spend} the server uses. An
+     * update costs nothing, and with infinite materials everything is paid. The old camo a replace returns is never
+     * counted: it is a camo of another block than the copied one, and every paid change of a plan is a camo of the
+     * copied block, so it could not pay for a later change.
+     */
+    public static int affordable(Player player, List<Planner.Change> changes) {
+        if (player.hasInfiniteMaterials()) {
+            return changes.size();
+        }
+        List<ItemStack> copies = new ArrayList<>();
+        for (ItemStack stack : carried(player.getInventory())) {
+            copies.add(stack.copy());
+        }
+        int paid = 0;
+        for (Planner.Change change : changes) {
+            if (change.kind() != Planner.Kind.UPDATE) {
+                Payment payment = find(copies, change.after().state().getBlock(), change.after().camoType());
+                if (payment == null) {
+                    break;
+                }
+                payment.spend();
+            }
+            paid++;
+        }
+        return paid;
     }
 
     public void spend() {

@@ -3,6 +3,8 @@ package plotinium.camolgimbal.server;
 import cy.jdkdigital.camol.common.item.CamoItem;
 import cy.jdkdigital.camol.utils.CamoHelper;
 import cy.jdkdigital.camol.utils.CamoPosition;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -13,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -60,33 +63,45 @@ public final class GimbalActions {
                 SeriesKeys.isHeld(player));
 
         boolean free = player.hasInfiniteMaterials();
-        int written = 0;
         int refused = 0;
         Planner.Change unpaid = null;
-        for (Planner.Change change : changes) {
-            // The camo may have changed since planning (another change of this series, or another mod).
-            if (!Objects.equals(view.camoAt(change.pos()), change.before())) {
-                continue;
-            }
-            if (!Permissions.canEdit(player, change.pos(), hit.face(), gimbal)) {
-                refused++;
-                continue;
-            }
-            boolean paid = change.kind() != Planner.Kind.UPDATE;
-            if (paid && !free) {
-                Payment payment = Payment.find(player, change.after().state().getBlock(), change.after().camoType());
-                if (payment == null) {
-                    unpaid = change;
-                    break;
+        // Every change is paid for before it is added here, and everything added is written once, in one call, even
+        // if a later check throws: nothing paid for is left unwritten.
+        Map<BlockPos, CamoPosition> writes = new LinkedHashMap<>();
+        List<CamoPosition> returns = new ArrayList<>();
+        try {
+            for (Planner.Change change : changes) {
+                // The camo may have changed since planning (another mod, or a listener of the permission event).
+                if (!Objects.equals(view.camoAt(change.pos()), change.before())) {
+                    continue;
                 }
-                payment.spend();
+                if (!Permissions.canEdit(player, change.pos(), hit.face(), gimbal)) {
+                    refused++;
+                    continue;
+                }
+                boolean paid = change.kind() != Planner.Kind.UPDATE;
+                if (paid && !free) {
+                    Payment payment = Payment.find(player, change.after().state().getBlock(), change.after().camoType());
+                    if (payment == null) {
+                        unpaid = change;
+                        break;
+                    }
+                    payment.spend();
+                }
+                writes.put(change.pos(), change.after());
+                if (change.kind() == Planner.Kind.REPLACE && !free) {
+                    returns.add(Objects.requireNonNull(change.before()));
+                }
             }
-            CamoHelper.setCamo(level, Map.of(change.pos(), change.after()));
-            if (change.kind() == Planner.Kind.REPLACE && !free) {
-                giveBack(player, Objects.requireNonNull(change.before()));
+        } finally {
+            if (!writes.isEmpty()) {
+                CamoHelper.setCamo(level, writes);
             }
-            written++;
+            for (CamoPosition old : returns) {
+                giveBack(player, old);
+            }
         }
+        int written = writes.size();
 
         if (unpaid != null) {
             if (written == 0) {
@@ -123,7 +138,10 @@ public final class GimbalActions {
         return true;
     }
 
-    /** Shift and left click: the camouflage is removed and its camo item drops, except in creative. */
+    /**
+     * Shift and left click: the camouflage is removed and its camo item drops, except in creative. With block drops
+     * turned off by the game rule, the item goes to the inventory instead of being lost.
+     */
     public static boolean remove(ServerPlayer player, BlockPos pos, Direction face) {
         ItemStack gimbal = player.getMainHandItem();
         if (!gimbal.is(ModRegistry.GIMBAL) || !reachable(player, pos)) {
@@ -141,7 +159,12 @@ public final class GimbalActions {
         }
         CamoHelper.setCamo(level, Map.of(pos.immutable(), new CamoPosition(SavedCopy.NORMAL, Blocks.AIR.defaultBlockState())));
         if (!player.hasInfiniteMaterials()) {
-            Block.popResourceFromFace(level, pos, face, camoItemOf(camo));
+            if (level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
+                Block.popResourceFromFace(level, pos, face, camoItemOf(camo));
+            } else {
+                // Without block drops the item would be lost: it goes to the inventory, as a replaced camo does.
+                giveBack(player, camo);
+            }
         }
         return true;
     }

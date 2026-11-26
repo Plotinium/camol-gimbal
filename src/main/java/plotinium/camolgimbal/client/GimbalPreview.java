@@ -3,7 +3,9 @@ package plotinium.camolgimbal.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.logging.LogUtils;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -16,6 +18,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -34,13 +37,15 @@ import plotinium.camolgimbal.data.SavedCopy;
 import plotinium.camolgimbal.item.GimbalItem;
 import plotinium.camolgimbal.registry.ModRegistry;
 import plotinium.camolgimbal.rules.Planner;
+import plotinium.camolgimbal.server.Payment;
 
 /**
  * The preview (D-19): the result of a right click, drawn see-through on every block it would change.
  *
  * <p>The changes come from {@link Planner}, which the server runs too, with the client's copy of the camouflages. They
- * are computed once per tick and drawn every frame. The client knows nothing of claims, and the preview does not count
- * the items carried.
+ * are computed once per tick and drawn every frame, cut where the items carried run out ({@link Payment#affordable},
+ * the server's own count). The client knows nothing of claims. Only a Gimbal in the main hand shows it: from the off
+ * hand, a block's own action comes first. A block whose model fails to draw is left out from then on, logged once.
  */
 @EventBusSubscriber(modid = CamolGimbal.MOD_ID, value = Dist.CLIENT)
 public final class GimbalPreview {
@@ -52,6 +57,7 @@ public final class GimbalPreview {
     private static List<Planner.Change> changes = List.of();
     private static ClientLevel level;
     private static boolean failureLogged;
+    private static final Set<Block> FAILED = new HashSet<>();
 
     private GimbalPreview() {
     }
@@ -79,7 +85,10 @@ public final class GimbalPreview {
                 || hit.getType() != HitResult.Type.BLOCK) {
             return List.of();
         }
-        ItemStack gimbal = clickingGimbal(player);
+        ItemStack gimbal = player.getMainHandItem();
+        if (!gimbal.is(ModRegistry.GIMBAL)) {
+            return List.of();
+        }
         SavedCopy copy = gimbal.get(ModRegistry.COPY);
         if (copy == null) {
             return List.of();
@@ -88,22 +97,10 @@ public final class GimbalPreview {
         if (!settings.preview()) {
             return List.of();
         }
-        return Planner.plan(minecraft.level, ClientCamos.VIEW, player, copy, settings,
+        List<Planner.Change> planned = Planner.plan(minecraft.level, ClientCamos.VIEW, player, copy, settings,
                 new Planner.Hit(hit.getBlockPos(), hit.getDirection(), hit.getLocation()), player.getDirection(),
                 GimbalKeys.SERIES.isDown());
-    }
-
-    /**
-     * The Gimbal a right click would use: in the main hand, or in the off hand while the main hand is empty. An item
-     * in the main hand usually takes the click.
-     */
-    private static ItemStack clickingGimbal(LocalPlayer player) {
-        ItemStack main = player.getMainHandItem();
-        if (main.is(ModRegistry.GIMBAL)) {
-            return main;
-        }
-        ItemStack off = player.getOffhandItem();
-        return main.isEmpty() && off.is(ModRegistry.GIMBAL) ? off : ItemStack.EMPTY;
+        return planned.subList(0, Payment.affordable(player, planned));
     }
 
     @SubscribeEvent
@@ -123,25 +120,50 @@ public final class GimbalPreview {
         VertexConsumer consumer = new Ghost(buffers.getBuffer(target));
         BlockRenderDispatcher blocks = minecraft.getBlockRenderer();
         RandomSource random = RandomSource.create();
-        for (Planner.Change change : changes) {
-            BlockPos pos = change.pos();
-            BlockState state = change.after().state();
-            BakedModel model = blocks.getBlockModel(state);
-            ModelData data = model.getModelData(minecraft.level, pos, state, ModelData.EMPTY);
-            long seed = state.getSeed(pos);
-            pose.pushPose();
-            pose.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
-            pose.translate(0.5F, 0.5F, 0.5F);
-            pose.scale(SCALE, SCALE, SCALE);
-            pose.translate(-0.5F, -0.5F, -0.5F);
-            random.setSeed(seed);
-            for (RenderType type : model.getRenderTypes(state, random, data)) {
-                blocks.getModelRenderer().tesselateWithoutAO(minecraft.level, model, state, pos, pose, consumer, true,
-                        random, seed, OverlayTexture.NO_OVERLAY, data, type);
+        try {
+            for (Planner.Change change : changes) {
+                BlockState state = change.after().state();
+                if (FAILED.contains(state.getBlock())) {
+                    continue;
+                }
+                pose.pushPose();
+                try {
+                    draw(minecraft, blocks, pose, consumer, random, camera, change.pos(), state);
+                } catch (RuntimeException exception) {
+                    // A modded model can fail outside a real chunk: that block is left out of the preview.
+                    FAILED.add(state.getBlock());
+                    LOGGER.warn("Cannot draw {} in the Gimbal preview; it is left out", state, exception);
+                } finally {
+                    pose.popPose();
+                }
             }
-            pose.popPose();
+        } finally {
+            try {
+                buffers.endBatch(target);
+            } catch (RuntimeException exception) {
+                changes = List.of();
+                if (!failureLogged) {
+                    failureLogged = true;
+                    LOGGER.warn("Cannot draw the Gimbal preview", exception);
+                }
+            }
         }
-        buffers.endBatch(target);
+    }
+
+    private static void draw(Minecraft minecraft, BlockRenderDispatcher blocks, PoseStack pose,
+            VertexConsumer consumer, RandomSource random, Vec3 camera, BlockPos pos, BlockState state) {
+        BakedModel model = blocks.getBlockModel(state);
+        ModelData data = model.getModelData(minecraft.level, pos, state, ModelData.EMPTY);
+        long seed = state.getSeed(pos);
+        pose.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
+        pose.translate(0.5F, 0.5F, 0.5F);
+        pose.scale(SCALE, SCALE, SCALE);
+        pose.translate(-0.5F, -0.5F, -0.5F);
+        random.setSeed(seed);
+        for (RenderType type : model.getRenderTypes(state, random, data)) {
+            blocks.getModelRenderer().tesselateWithoutAO(minecraft.level, model, state, pos, pose, consumer, true,
+                    random, seed, OverlayTexture.NO_OVERLAY, data, type);
+        }
     }
 
     /** Half transparent and fully lit: inside a solid block the world's light would leave the preview black. */

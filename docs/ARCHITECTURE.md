@@ -28,7 +28,8 @@ write nothing and check no permission. Entry points for the preview: `CamoView` 
   sample, so a difference outside the sample is missed.
 
 - `Selection`: the blocks of a series (D-11), breadth first from the clicked block, nearest first, up
-  to the limit, loaded positions only. "Same kind" is the camo block where the origin has a camo;
+  to the limit, only positions whose chunk and neighbouring chunks are loaded (planning reads the
+  neighbours, and on the server reading an unloaded chunk loads it). "Same kind" is the camo block where the origin has a camo;
   otherwise blocks without a camo whose real block is the origin's. Row on a wall runs along the
   face's clockwise axis, on a floor or ceiling across the player's look; column on a wall is
   vertical, on a floor or ceiling along the look.
@@ -61,17 +62,25 @@ write nothing and check no permission. Entry points for the preview: `CamoView` 
   `BlockEvent.EntityPlaceEvent` that nobody cancels (claim mods protect placement), its snapshot
   holding the block's current state. Used for every position about to be written, the clicked one
   included, and for copy, which writes nothing but is an action the Constraints protect. FTB Chunks
-  2101.1.22 registers on Architectury's place event (read in its jar, not tried in a run). **Never post `BlockEvent.BreakEvent`:** Camol removes
-  the camo on it.
+  2101.1.22 refuses it: Architectury 13.0.11 forwards `EntityPlaceEvent` to its `BlockEvent.PLACE`
+  and cancels the NeoForge event when a listener says no, and FTB Chunks' `blockPlace` listener
+  refuses a `ServerPlayer` that its claim protection keeps out (read in both jars, not tried in game).
+  **Never post `BlockEvent.BreakEvent`:** Camol removes the camo on it.
 - `Payment` (D-17), for `PLACE` and `REPLACE`, from the main inventory and the off hand: a filled camo
   item of the block (own type first, then the other); else an empty camo item (own type first) plus
   one block item. The block item must be that block's, not in `camol:disallowed_camo_blocks`, and
   carry no components beyond its default ones. Both stacks are found before either shrinks.
 - Order for each change: the camo is still the planned `before` (else skipped), permission, payment,
-  write with `CamoHelper.setCamo`, return of the old camo (`REPLACE`: inventory, else a drop at the
-  player). A series stops at the first change that cannot be paid; a refused position is skipped.
-- Removal drops the camo item from the clicked face as Camol does. In creative nothing is spent or
-  given back, a replaced camo included.
+  then the change joins the writes. After the loop, in a `finally`, all writes go in one
+  `CamoHelper.setCamo` call, then the old camos of `REPLACE` return once each (inventory, else a drop
+  at the player): nothing paid for stays unwritten, even if a check throws. A series stops at the
+  first change that cannot be paid; a refused position is skipped.
+- `Payment.affordable(player, changes)`: how many planned changes, in order, the carried items pay,
+  spending copies of the stacks with the same find and spend. The preview cuts its changes there. A
+  returned old camo is of another block than the copied one, so it never pays for a later change.
+- Removal drops the camo item from the clicked face as Camol does; with the `doTileDrops` game rule
+  off, the item goes to the inventory instead (else it would be lost). In creative nothing is spent
+  or given back, a replaced camo included.
 - `SeriesKeys`: who holds the series key, as the client reports it; cleared on logout.
 - `Messages`: action bar texts (nothing copied, nothing to copy, no camo, items missing, series
   stopped after N, refused, N refused).
@@ -86,9 +95,10 @@ write nothing and check no permission. Entry points for the preview: `CamoView` 
 - Left click (`client.GimbalInput`): while the Gimbal is in the main hand and the crosshair is on a
   block, the client cancels `InputEvent.InteractionKeyMappingTriggered` for the attack, every time:
   it fires from `startAttack` on the press and from `continueAttack` on every tick the button is
-  held. The packet `LeftClickPayload(pos, face, remove)` goes only for a real press: a raw press of
-  the attack binding with no screen open arms one packet, the next block attack input spends it, and
-  the end of the client tick disarms it. Closing a screen with the button held sends nothing
+  held. The packet `LeftClickPayload(pos, face, remove)` goes at the raw press of the attack binding
+  with no screen open, for the block under the crosshair then, so one press is one packet. It does
+  not wait for the attack input: vanilla holds that back for up to 10 ticks after a click in the air
+  (`missTime`). Closing a screen with the button held sends nothing
   (`MouseHandler.grabMouse` sets the binding down again without a press). `remove` is Shift as the
   client saw it. Entities and the air are left to vanilla. `canAttackBlock` is false as a
   backstop. The server does not post `PlayerInteractEvent.LeftClickBlock`: `CommonHooks.onLeftClickBlock`
@@ -136,11 +146,12 @@ write nothing and check no permission. Entry points for the preview: `CamoView` 
 - `BlockLooks`: how a state looks for `VisibleStates` (render shape, quads per render type with seed
   42, tint without a world, outline and collision shapes), cached per block, cleared on resource
   reload. A block that throws keeps its states offered.
-- `GimbalPreview`: once per client tick it runs `Planner.plan` for the Gimbal a right click would use
-  (main hand, or off hand with an empty main hand), when the switch is on, a block is targeted, not
+- `GimbalPreview`: once per client tick it runs `Planner.plan` for a Gimbal in the main hand (from
+  the off hand the block's own action comes first), cut at `Payment.affordable`, when the switch is on, a block is targeted, not
   sneaking, no screen open. Drawn at `AFTER_TRANSLUCENT_BLOCKS` with
   `ModelBlockRenderer.tesselateWithoutAO` into `RenderType.translucentMovingBlock`, scaled 1.01
-  (Camol draws at 1.005), full light, reduced alpha. It ignores claims and the items carried.
+  (Camol draws at 1.005), full light, reduced alpha. It ignores claims. A block whose model throws
+  while drawn is left out of the preview from then on and logged once per block.
 
 ## Mixins
 

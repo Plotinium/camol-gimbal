@@ -24,18 +24,19 @@ import plotinium.camolgimbal.registry.ModRegistry;
  *
  * <p>Left click: while the Gimbal is in the main hand and the crosshair is on a block, every attack input is
  * cancelled: NeoForge fires it once from {@code startAttack} on the press and again from {@code continueAttack} on
- * every tick the button is held, so the block is never broken. The packet goes only for a real press: a raw press of
- * the attack binding, seen with no screen open, arms one packet, which the next block attack input of that tick
- * spends. Holding the button sends nothing more, and neither does closing a screen with the button held, where
- * {@code MouseHandler.grabMouse} sets the binding down again without a press. Entities and the air are left to
- * vanilla.
+ * every tick the button is held, so the block is never broken. The packet goes at the raw press of the attack binding,
+ * with no screen open, for the block under the crosshair at that moment: one press, one packet. It does not wait for
+ * the attack input, which vanilla holds back for up to 10 ticks after a click in the air ({@code missTime}), so a
+ * click on a camo right after a missed one is not lost, and a press that began elsewhere never acts on a block the
+ * crosshair slides onto. Holding the button sends nothing more, and neither does closing a screen with the button
+ * held, where {@code MouseHandler.grabMouse} sets the binding down again without a press. Entities and the air are
+ * left to vanilla.
  *
  * <p>Menu key: only a real press, seen with no screen open, opens the menu. A key held after the menu closed keeps
  * repeating, and each repeat counts as a click for Minecraft.
  */
 @EventBusSubscriber(modid = CamolGimbal.MOD_ID, value = Dist.CLIENT)
 public final class GimbalInput {
-    private static boolean pressArmed;
     private static boolean menuArmed;
     private static boolean seriesSent;
 
@@ -46,7 +47,7 @@ public final class GimbalInput {
     public static void onMouseButton(InputEvent.MouseButton.Pre event) {
         if (event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             if (Minecraft.getInstance().options.keyAttack.matchesMouse(event.getButton())) {
-                pressArmed = true;
+                attackPressed();
             }
             if (GimbalKeys.MENU.matchesMouse(event.getButton())) {
                 menuArmed = true;
@@ -58,7 +59,7 @@ public final class GimbalInput {
     public static void onKey(InputEvent.Key event) {
         if (event.getAction() == GLFW.GLFW_PRESS && Minecraft.getInstance().screen == null) {
             if (Minecraft.getInstance().options.keyAttack.matches(event.getKey(), event.getScanCode())) {
-                pressArmed = true;
+                attackPressed();
             }
             if (GimbalKeys.MENU.matches(event.getKey(), event.getScanCode())) {
                 menuArmed = true;
@@ -66,21 +67,35 @@ public final class GimbalInput {
         }
     }
 
-    @SubscribeEvent
-    public static void onAttack(InputEvent.InteractionKeyMappingTriggered event) {
+    /** A real press of the attack binding: copy or remove the block under the crosshair, if the Gimbal acts on it. */
+    private static void attackPressed() {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
-        if (!event.isAttack() || player == null || !player.getMainHandItem().is(ModRegistry.GIMBAL)
-                || !(minecraft.hitResult instanceof BlockHitResult hit) || hit.getType() != HitResult.Type.BLOCK
-                || minecraft.level == null || minecraft.level.getBlockState(hit.getBlockPos()).isAir()) {
+        BlockHitResult hit = gimbalTarget(minecraft);
+        if (hit == null || minecraft.getOverlay() != null || player.isSpectator() || player.isUsingItem()
+                || player.isHandsBusy()) {
             return;
         }
-        event.setCanceled(true);
-        event.setSwingHand(pressArmed);
-        if (pressArmed) {
-            pressArmed = false;
-            PacketDistributor.sendToServer(
-                    new LeftClickPayload(hit.getBlockPos(), hit.getDirection(), player.isShiftKeyDown()));
+        PacketDistributor.sendToServer(new LeftClickPayload(hit.getBlockPos(), hit.getDirection(), player.isShiftKeyDown()));
+        player.swing(InteractionHand.MAIN_HAND);
+    }
+
+    /** The block under the crosshair while the local player holds the Gimbal in the main hand, or null. */
+    private static BlockHitResult gimbalTarget(Minecraft minecraft) {
+        LocalPlayer player = minecraft.player;
+        if (player == null || minecraft.level == null || !player.getMainHandItem().is(ModRegistry.GIMBAL)
+                || !(minecraft.hitResult instanceof BlockHitResult hit) || hit.getType() != HitResult.Type.BLOCK
+                || minecraft.level.getBlockState(hit.getBlockPos()).isAir()) {
+            return null;
+        }
+        return hit;
+    }
+
+    @SubscribeEvent
+    public static void onAttack(InputEvent.InteractionKeyMappingTriggered event) {
+        if (event.isAttack() && gimbalTarget(Minecraft.getInstance()) != null) {
+            event.setCanceled(true);
+            event.setSwingHand(false);
         }
     }
 
@@ -100,7 +115,6 @@ public final class GimbalInput {
 
     @SubscribeEvent
     public static void onTickEnd(ClientTickEvent.Post event) {
-        pressArmed = false;
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         boolean pressed = menuArmed;
@@ -117,7 +131,6 @@ public final class GimbalInput {
     @SubscribeEvent
     public static void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         seriesSent = false;
-        pressArmed = false;
         menuArmed = false;
     }
 

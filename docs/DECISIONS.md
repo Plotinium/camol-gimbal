@@ -197,7 +197,8 @@ The menu edits what is in front of the player.
 - A permission check never posts `BlockEvent.BreakEvent`: Camol listens to it, drops the camo item
   and erases the camouflage.
 - Cost is spent before the camouflage is written.
-- Applying wins over the block's own interaction (machines, doors, levers).
+- Applying wins over the block's own interaction (machines, doors, levers) from the main hand; from
+  the off hand the block's own action comes first.
 - Placing a camouflage honors `camol:disallowed_camoable_blocks` for the target and, on the
   ingredient path, `camol:disallowed_camo_blocks` and the need for a block item.
 - The server cannot see the client's Ctrl key: the series key is a key binding whose state the client

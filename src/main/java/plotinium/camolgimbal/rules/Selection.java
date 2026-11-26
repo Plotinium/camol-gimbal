@@ -15,7 +15,7 @@ import plotinium.camolgimbal.data.SeriesShape;
 
 /**
  * The blocks of a series (D-11): neighbours touching by a face, of the same kind as the clicked block, nearest first,
- * up to the limit. The clicked block is always first.
+ * up to the limit, in loaded surroundings only. The clicked block is always first.
  *
  * <p>Same kind: where the clicked block has a camouflage, camouflages of the same camo block; otherwise blocks
  * without a camouflage whose real block is the same.
@@ -41,12 +41,22 @@ public final class Selection {
             result.add(pos);
             for (Direction step : steps) {
                 BlockPos next = pos.relative(step);
-                if (seen.add(next) && level.isLoaded(next) && sameKind.test(next)) {
+                if (seen.add(next) && neighbourhoodLoaded(level, next) && sameKind.test(next)) {
                     queue.add(next);
                 }
             }
         }
         return result;
+    }
+
+    /**
+     * A position joins a series only with its own chunk and the chunks of its neighbours loaded: planning it reads the
+     * neighbours (the placement of stairs, fences, walls), and on the server reading an unloaded chunk loads it on the
+     * spot.
+     */
+    public static boolean neighbourhoodLoaded(Level level, BlockPos pos) {
+        return level.isLoaded(pos)
+                && level.hasChunksAt(pos.getX() - 1, pos.getZ() - 1, pos.getX() + 1, pos.getZ() + 1);
     }
 
     private static Predicate<BlockPos> sameKind(Level level, CamoView view, BlockPos origin) {
