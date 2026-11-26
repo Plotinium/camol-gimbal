@@ -4,8 +4,10 @@ State on 2026-11-26.
 
 ## Not verified
 
-- Nothing has been seen in a game client: drawing, menu, preview, label, keys and left click. The
+- The mod has never been started in a game client, so not even startup is proven. Nothing has been
+  seen: drawing, menu, preview, label, keys and left click. The
   checklist is `guide/prove.md`.
+- Not tried with Sodium, Iris, shader packs or the rest of ATM10.
 - No run on a real dedicated server. Camol's Shape Retaining collision probably does not apply there
   (`CAMOL_NOTES.md`).
 - FTB Chunks claims: read in the jars, not tried. Spawn protection cannot be tried by the game tests.

@@ -5,6 +5,15 @@ Ogni sezione dice cosa fare, cosa deve succedere e dove guardare se qualcosa non
 
 Il registro del gioco sta in `run\logs\latest.log`.
 
+## Prima di tutto: il gioco parte
+
+La mod non è mai stata avviata dentro un gioco con la grafica. Controlla che:
+
+1. il gioco arrivi al menu principale e un mondo si apra;
+2. in `latest.log` non ci siano righe ERROR o WARN che nominano `camolgimbal`.
+
+Se il gioco si chiude o una di queste righe compare, fermati e manda il registro.
+
 ## Il Gimbal e i blocchi in trasparenza
 
 ### Preparazione
@@ -277,3 +286,17 @@ difetto già noto di Camol sui server dedicati, non del Gimbal.
 Nessuna delle quattro azioni deve riuscire, e sulla barra in basso compare «Non puoi modificare questo
 blocco» (o non compare niente, se è FTB Chunks a fermare il clic destro). Fuori dal chunk reclamato
 le stesse azioni riescono.
+
+## In ATM10
+
+La prova con `runClient` non ha le mod grafiche di ATM10 (Sodium, Iris) né le altre del pacchetto.
+Copia il file della mod nell'istanza come dice [sviluppo.md](sviluppo.md), poi:
+
+1. ripeti i controlli del primo avvio; il registro è `logs\latest.log` nella cartella dell'istanza;
+2. ripeti la trasparenza, l'anteprima e il menu con le sue figure in 3D;
+3. ripeti la trasparenza e l'anteprima con uno shader attivo, se li usi;
+4. nei comandi del gioco, sotto Camol Gimbal, controlla che i due tasti siano ancora assegnati
+   (ATM10 ha una mod che può togliere le assegnazioni);
+5. con la chiave di Create sullo stesso tasto del menu, controlla quale menu si apre con il Gimbal in
+   mano e quale con la chiave.
+
