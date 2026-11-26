@@ -48,7 +48,18 @@ dove c'è anche `draw.py`, è il programma che ha generato quel disegno e non se
 | `docs\art\4-final` | pinza in linea, con l'attacco della ganascia dietro in vista a sinistra: **è quella usata dalla mod** |
 
 Per usarne un altro nel gioco, copia il suo `gimbal.png` sopra il primo file della prima tabella. Le
-due immagini più grandi vanno poi rifatte con lo stesso disegno.
+due immagini più grandi si rifanno dallo stesso disegno con i comandi qui sotto, dalla cartella del
+progetto (nell'esempio il disegno è `4-final`). Serve Python, presente sul PC (verificato il
+2026-11-26), e un disegno 32x32 salvato in PNG a colori pieni con trasparenza, non a tavolozza.
+Riscrivono le due immagini grandi; il secondo comando aggiorna la copia in `docs\publish\icon.png`.
+
+```powershell
+python docs\art\enlarge.py icons docs\art\4-final\gimbal.png src\main\resources\camolgimbal_logo.png docs\publish\icon-400.png
+```
+
+```powershell
+Copy-Item src\main\resources\camolgimbal_logo.png docs\publish\icon.png
+```
 
 Programmi per disegnare a pixel (prezzi non verificati): Piskel (gratuito, nel browser), Pixelorama
 o LibreSprite (gratuiti), Aseprite (a pagamento), Blockbench (gratuito, mostra anche l'oggetto in
