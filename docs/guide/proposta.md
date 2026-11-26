@@ -9,4 +9,5 @@ con il tuo account GitHub. Non cambia niente nella mod.
 3. Come titolo incolla la riga sotto "Title"; come testo incolla tutto quello sotto "Body".
 4. Pubblica.
 
-Conviene farlo dopo aver pubblicato la mod, così nel testo puoi aggiungere il collegamento.
+Mandala prima di pubblicare e aggiungi in fondo la domanda sul nome: "Is the name Camol Gimbal fine
+with you?". Il collegamento al codice è <https://github.com/Plotinium/camol-gimbal>.

@@ -23,6 +23,5 @@ State on 2026-11-26.
 
 ## To do
 
-- Plotinium plays the checklist, then publishes (`guide/pubblicazione.md`).
-- The proposal to Camol is written and not sent (`guide/proposta.md`).
+- What is left for the author: `guide/da-fare.md`.
 - Later, not in this version: blocks drawn by a block entity renderer as camouflages (D-14).

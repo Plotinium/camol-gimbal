@@ -56,8 +56,8 @@ Other wrenches do not act on camouflages, so nothing interferes with their own a
 
 The addon is tested by Plotinium in game and then published. It works in singleplayer and on a
 dedicated server. It is made for an international audience: English repository and texts, with
-translations. The author name is Plotinium. The license is MIT; the mod is published on CurseForge
-and Modrinth.
+translations. The author name is Plotinium. The license is MIT; the mod is published on CurseForge,
+and on Modrinth only if its rules on generative AI allow it (`guide/da-fare.md`).
 
 ## D-7 - Minecraft 1.21.1, NeoForge
 
@@ -188,14 +188,20 @@ The menu edits what is in front of the player.
 | Replace the block | On an existing camo the block changes too: the new camo is paid for (D-17), then the old one returns to the inventory, or drops at the player if it is full | off |
 | Preview | Shows the result, on every block it would change, before the click | on |
 
-## D-20 - The look of the Gimbal
+## D-20 - The name and look of the item
 
-A lilac blob like the one on Camol's items, squeezed at the waist by round golden tongs on an iron
-handle: the camo caught and bent to the player's will. It is our own 32x32 drawing; no Camol file is
-used. The mod page icon is the same drawing.
+The item is called Camol Gimbal. It shows a lilac blob like the one on Camol's items, squeezed at the
+waist by golden tongs: the camo caught and bent to the player's will. The author is redrawing the
+sprite by hand, so that it reads as a closed pair of tongs. The current file is a 32x32 drawing made
+for this mod; no Camol file is used. The mod page icon is the same drawing.
 
-- **Rejected:** a round sceptre with three colours; using Camol's texture; a 16x16 drawing, too small
-  for the face and the tongs.
+- **Rejected:** a round sceptre with three colours; using Camol's texture; a 16x16 drawing made by
+  generator, too small for the face and the tongs.
+
+## D-22 - The use of generative AI is declared
+
+The README, the project page text and the mod's description say that the mod was made with generative
+AI, and which parts.
 
 ## D-21 - On screen label and messages
 

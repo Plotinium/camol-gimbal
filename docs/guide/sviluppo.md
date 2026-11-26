@@ -27,3 +27,20 @@ scrive `visual check: ok`; se qualcosa non torna scrive cosa, e il registro è
 `run\` né le tue istanze, e non fa parte del file della mod.
 
 La lista di cosa controllare in gioco è in [prove.md](prove.md).
+
+## Cambiare il disegno del Camol Gimbal
+
+| File | Misura | Cos'è |
+|---|---|---|
+| `src\main\resources\assets\camolgimbal\textures\item\gimbal.png` | quadrato: 32x32 (va bene anche 16x16 o 64x64), sfondo trasparente | l'oggetto in gioco |
+| `src\main\resources\camolgimbal_logo.png` | 512x512 | l'immagine nell'elenco delle mod |
+| `docs\publish\icon-400.png` | 400x400 | l'icona per CurseForge |
+
+Programmi per disegnare a pixel (prezzi non verificati): Piskel (gratuito, nel browser), Pixelorama
+o LibreSprite (gratuiti), Aseprite (a pagamento), Blockbench (gratuito, mostra anche l'oggetto in
+mano). Salva sempre in PNG con la trasparenza, sopra il file indicato.
+
+Per vederlo in gioco chiudi il gioco e rilancia `.\gradlew.bat runClient`. A gioco aperto si può
+provare `.\gradlew.bat processResources` e poi F3 insieme a T (non provato). Per un cambio di solo
+disegno non servono le prove automatiche.
+

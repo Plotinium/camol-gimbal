@@ -27,6 +27,13 @@ on both client and server.
 Camol Gimbal is an unofficial addon, not made by Camol's author. The radial menu is adapted from
 Create's wrench menu (MIT license). No Create files are included and Create is not required.
 
+## AI disclosure
+
+This mod was made with generative AI. The code, the item texture, the icon, the translations and the
+written text, including the project page and the documentation, were produced by an AI coding
+assistant. Plotinium had the idea, made the choices about how the mod behaves and looks, and tests it
+in game. The mod itself uses no AI while you play.
+
 ## Page details
 
 - Summary: A tool that turns and reshapes Camol camouflages.
@@ -36,4 +43,4 @@ Create's wrench menu (MIT license). No Create files are included and Create is n
 - Author: Plotinium.
 - Required dependency: Camol.
 - Environment: client and server.
-- Icon: `icon.png`.
+- Icon: `icon-400.png`.
