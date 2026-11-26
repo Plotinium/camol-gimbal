@@ -4,8 +4,8 @@ State on 2026-11-26.
 
 ## Not verified
 
-- The mod has never been started in a game client, so not even startup is proven. Nothing has been
-  seen: drawing, menu, preview, label, keys and left click. The
+- The development client starts up to the main menu with no error naming the mod (verified
+  2026-11-26). Nothing has been seen in a world: drawing, menu, preview, label, keys and left click. The
   checklist is `guide/prove.md`.
 - Not tried with Sodium, Iris, shader packs or the rest of ATM10.
 - No run on a real dedicated server. Camol's Shape Retaining collision probably does not apply there

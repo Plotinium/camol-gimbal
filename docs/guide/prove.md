@@ -7,7 +7,8 @@ Il registro del gioco sta in `run\logs\latest.log`.
 
 ## Prima di tutto: il gioco parte
 
-La mod non è mai stata avviata dentro un gioco con la grafica. Controlla che:
+Il gioco di sviluppo arriva al menu principale senza errori della mod (verificato il 2026-11-26).
+In un mondo non è ancora stata vista. Controlla che:
 
 1. il gioco arrivi al menu principale e un mondo si apra;
 2. in `latest.log` non ci siano righe ERROR o WARN che nominano `camolgimbal`.
