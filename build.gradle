@@ -65,6 +65,15 @@ neoForge {
             gameDirectory = project.file('run/gametest')
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
+        // The visual check (docs/guide/sviluppo.md): a client that creates its own test world, saves screenshots and
+        // quits. Its folder is under build/, never run/.
+        visualClient {
+            client()
+            sourceSet = sourceSets.gametest
+            gameDirectory = project.file('build/visual')
+            systemProperty 'camolgimbal.visual', 'true'
+            programArguments.addAll '--width', '1280', '--height', '720'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
         }
@@ -129,6 +138,36 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.named('jar', Jar) {
     from('LICENSE', 'THIRD_PARTY_NOTICES.md')
+}
+
+// The visual check starts from an empty folder every time, with the options that let it run alone.
+tasks.register('prepareVisualCheck') {
+    def dir = project.file('build/visual')
+    def language = providers.gradleProperty('visualLanguage').getOrElse('it_it')
+    doLast {
+        ['saves', 'screenshots', 'logs'].each { new File(dir, it).deleteDir() }
+        dir.mkdirs()
+        new File(dir, 'options.txt').text = [
+                'onboardAccessibility:false', 'lang:' + language, 'tutorialStep:none', 'pauseOnLostFocus:false',
+                'guiScale:3', 'fullscreen:false', 'narrator:0', 'soundCategory_master:0.0', 'joinedFirstServer:true',
+                'skipMultiplayerWarning:true'].join('\n') + '\n'
+    }
+}
+tasks.register('visualCheck') {
+    group = 'verification'
+    description = 'Starts a client that takes screenshots of the Gimbal screens in build/visual/screenshots.'
+    def log = project.file('build/visual/logs/latest.log')
+    doLast {
+        def lines = log.exists() ? log.readLines('UTF-8').findAll { it.contains('visual check: ') } : []
+        lines.each { println it.substring(it.indexOf('visual check: ')) }
+        if (!lines.any { it.endsWith('visual check: ok') }) {
+            throw new GradleException('The visual check did not end with "visual check: ok": see ' + log)
+        }
+    }
+}
+afterEvaluate {
+    tasks.named('runVisualClient') { dependsOn 'prepareVisualCheck' }
+    tasks.named('visualCheck') { dependsOn 'runVisualClient' }
 }
 
 // Every GameTest run starts from a new world: a killed run leaves blocks that would fail the next one.

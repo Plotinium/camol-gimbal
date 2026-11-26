@@ -17,8 +17,10 @@ import org.slf4j.Logger;
 
 /** A small 3D block on a screen, drawn with Minecraft's own block renderer. */
 final class BlockPreview {
-    /** Above the screen's flat drawing; text over a preview must be drawn higher than this plus the block's size. */
+    /** Above the screen's flat drawing. */
     private static final float DEPTH = 150;
+    /** Where text must be drawn to cover a preview. */
+    static final float TEXT_DEPTH = 250;
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Set<Block> FAILED = new HashSet<>();
 

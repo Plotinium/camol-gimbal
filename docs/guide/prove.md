@@ -7,8 +7,9 @@ Il registro del gioco sta in `run\logs\latest.log`.
 
 ## Prima di tutto: il gioco parte
 
-Il gioco di sviluppo arriva al menu principale senza errori della mod (verificato il 2026-11-26).
-In un mondo non è ancora stata vista. Controlla che:
+La verifica visiva (vedi [sviluppo.md](sviluppo.md)) apre un mondo di prova e fotografa menu,
+etichetta e anteprima senza errori della mod (verificato il 2026-11-26). Non gioca al posto tuo: tasti,
+mouse e sensazioni restano da provare. Controlla che:
 
 1. il gioco arrivi al menu principale e un mondo si apra;
 2. in `latest.log` non ci siano righe ERROR o WARN che nominano `camolgimbal`.
@@ -47,8 +48,8 @@ stabile: niente blocchi che lampeggiano o che restano in uno stato diverso dagli
 
 ### Interruttore della trasparenza spento
 
-Con il Gimbal in mano apri il menu (Shift e clic destro) e metti «Camo trasparenti» su No. Chiudi il
-menu: ogni Gimbal tiene il proprio interruttore. Per le righe con due Gimbal, il secondo resta com'è
+Con il Gimbal in mano apri il menu (Shift e clic destro), premi «Impostazioni» e metti «Camo
+trasparenti» su No. Chiudi il menu: ogni Gimbal tiene la propria scelta. Per le righe con due Gimbal, il secondo resta com'è
 appena creato.
 
 | Cosa hai in mano | Cosa devi vedere |
@@ -130,20 +131,26 @@ nella lingua del gioco.
 
 ### Etichetta
 
-1. Con il Gimbal in mano, guarda un blocco con una camo: sotto il mirino compaiono il blocco, il tipo
-   (Camo Block o Shape Retaining Camo Block) e i suoi stati, per esempio «Direzione: Nord».
-2. Guarda un blocco senza camo, o metti via il Gimbal: l'etichetta sparisce.
-3. Premi F1, poi apri l'inventario: in tutti e due i casi l'etichetta non si vede.
-4. Compaiono solo gli stati che cambiano l'aspetto o la forma. Una camo di foglie non ha voci sotto il
-   tipo; una camo di porta non mostra «Alimentato»; una camo di scale non mostra la voce dell'acqua.
+1. Con il Gimbal in mano, guarda un blocco con una camo: sul bordo sinistro, a metà altezza, compare un
+   riquadro con l'icona del blocco, il nome e, sotto, i suoi valori in fila, per esempio «Nord · Sotto ·
+   Chiusa».
+2. Prova una botola e una porta («Aperta» o «Chiusa»), un forno («Accesa» o «Spenta»), una porta
+   («Cardine a sinistra»), un tronco («Verticale», «Asse est-ovest»). Le voci senza una parola propria si
+   leggono con il nome, per esempio «Est: Sì» o «Crescita: 3».
+3. Una camo messa con lo Shape Retaining Camo Block dice «Shape Retaining» accanto al nome o sotto.
+4. Guarda un blocco con un nome lungo o con molti valori: il riquadro non arriva mai al mirino; ciò che
+   non ci sta finisce con tre puntini.
+5. L'etichetta sparisce guardando un blocco senza camo, mettendo via il Gimbal, premendo F1 o F3, e con
+   qualsiasi schermata aperta, chat compresa.
+6. Compaiono solo gli stati che cambiano l'aspetto o la forma. Una camo di foglie mostra solo il nome;
+   una camo di porta non dice se è alimentata; una camo di scale non dice niente dell'acqua.
 
 ## Il menu
 
-Si prova prima in finestra. La finestra di `runClient` appena aperta, con Opzioni, Grafica, «Scala»
-su automatica, è il caso più stretto: ruota e pannello non si devono sovrapporre, e niente deve
-uscire dallo schermo. Poi ingrandisci la finestra e prova anche lo schermo intero: ridimensionando con
-il menu aperto, tutto si ridispone. Controlla anche che le scritte lunghe sui tasti del pannello
-(scorrono dentro il tasto) si leggano in italiano e in inglese.
+Si prova prima in finestra. La finestra di `runClient` appena aperta, con Opzioni, Grafica, «Scala» su
+automatica, è il caso più stretto: niente si deve sovrapporre o uscire dallo schermo, e i riquadri
+restano sopra la barra degli oggetti. Poi ingrandisci la finestra e prova anche lo schermo intero:
+ridimensionando con il menu aperto, tutto si ridispone.
 
 ### Aprire e chiudere
 
@@ -154,17 +161,19 @@ Prepara una camo di scale di quercia e tieni il Gimbal nella mano principale.
 | Guardi la camo e tieni premuto Alt sinistro | si apre il menu con la ruota «Questa camo»; il mouse è al centro della ruota |
 | Rilasci Alt senza muovere il mouse | il menu si chiude, la camo non cambia |
 | Tieni Alt, porti il mouse su uno spicchio, rilasci Alt | la camo prende quel valore e il menu si chiude |
-| Tieni Alt, clic sinistro su uno spicchio, e continui a tenere Alt per qualche secondo | la camo cambia, il menu si chiude e non si riapre finché non rilasci e premi di nuovo Alt |
-| Tieni Alt, clic destro (poi rifai con Esc) | il menu si chiude senza cambiare niente e non si riapre finché Alt resta premuto; Esc non apre la pausa |
+| Tieni Alt, clicchi una riga dell'elenco a sinistra, poi porti il mouse su uno spicchio e rilasci | la ruota passa a quella voce, poi la camo prende il valore e il menu si chiude |
+| Tieni Alt e rilasci con il mouse sull'elenco, sui riquadri a destra o al centro della ruota | il menu si chiude senza cambiare niente |
+| Tieni Alt, clic sinistro su uno spicchio | la camo cambia e il menu resta aperto; rilasciando Alt con il mouse ancora lì il menu si chiude |
+| Tieni Alt, clic destro (poi rifai con Esc), e continui a tenere Alt | il menu si chiude e non si riapre finché non rilasci e premi di nuovo Alt; Esc non apre la pausa |
 | Tocchi Alt velocemente | il menu lampeggia e si chiude, la camo non cambia |
 | Tieni Alt, porti il mouse su uno spicchio e passi a un'altra finestra con Alt e Tab | tornando al gioco la camo non è cambiata |
+| Tieni Alt, clic su «Impostazioni», poi rilasci Alt | la pagina resta aperta; «Indietro» torna al menu, che ora resta aperto |
 | Shift e clic destro sulla camo | il menu si apre e resta aperto anche lasciando i tasti; la copia non viene applicata |
 | Nel menu aperto così, premi e rilasci Alt | non succede niente |
-| Nel menu aperto così, clic sinistro su uno spicchio e tieni premuto | la camo cambia e il menu si chiude; non parte una copia e il blocco non si incrina |
-| Clic sinistro al centro della ruota | non succede niente |
+| Nel menu aperto così, clic sinistro su più spicchi e voci diverse | ogni clic cambia la camo, il menu resta aperto e le modifiche si sommano; non parte una copia e il blocco non si incrina |
+| Clic sinistro al centro della ruota, o su uno spicchio con il valore di adesso | non cambia niente |
 | Clic destro per chiudere, e tieni premuto | si chiude, e il clic non applica niente al blocco davanti |
-| Shift e clic destro in aria, o su un blocco senza camo | la ruota è «Copia salvata»; senza niente di copiato c'è solo il pannello |
-| Clic sinistro su uno spicchio che ha il valore di adesso | il menu si chiude e non cambia niente |
+| Shift e clic destro in aria, o su un blocco senza camo | la ruota è «Copia salvata»; senza niente di copiato c'è solo il riquadro «Niente di copiato» con i due tasti |
 
 Rifai le righe con Alt dopo aver spostato «Menu del Gimbal» su una lettera, poi su un tasto laterale
 del mouse. Prova anche con il Gimbal nell'altra mano.
@@ -176,69 +185,66 @@ Se hai ATM10 o la chiave di Create: con il Gimbal in mano e il mouse su un mecca
 apre solo il menu del Gimbal. Con la chiave nella mano principale e il Gimbal nell'altra, se la chiave
 ha lo stesso tasto si apre il suo menu.
 
-### La ruota
+### La pagina principale
 
-1. La rotella del mouse passa da uno stato all'altro (per le scale: direzione, metà, forma). Al centro
-   si leggono il nome dello stato, il valore indicato dal mouse e a che punto sei (per esempio 2/3);
-   sopra e sotto, in grigio, lo stato precedente e il successivo.
-2. Ogni spicchio mostra il blocco in 3D con quel valore, girato come lo vedi tu. L'anello chiaro segna
+1. A sinistra l'elenco di tutte le voci con il valore di adesso; quella scelta è gialla. Un clic su una
+   riga, o la rotella del mouse, cambia la voce mostrata dalla ruota.
+2. Al centro della ruota: il nome della voce e il valore indicato dal mouse (o quello di adesso). Le
+   direzioni stanno come su una bussola: nord in alto, est a destra, sud in basso, ovest a sinistra.
+3. Ogni spicchio mostra il blocco in 3D con quel valore, girato come lo vedi tu. L'anello chiaro segna
    il valore che il blocco ha adesso.
-3. Prova blocchi diversi: un tronco (asse), una lastra, una botola (aperta), un recinto (i quattro
-   collegamenti), il grano (crescita), il filo di redstone (segnale, 16 valori: gli spicchi restano
-   leggibili), la pietra e il «Blocco sonoro» (compare «Niente da cambiare»). Il primo sguardo al filo di
-   redstone, che ha molti stati, non deve bloccare il gioco.
-4. Le porte non hanno la voce «Alimentato». Nessun blocco ha la voce dell'acqua. Segnala ogni voce che
-   cambia qualcosa a vista e non compare, o che compare e non cambia niente.
-5. Accendi della TNT sotto un blocco con una camo, guardalo e apri il menu con Shift e clic destro:
+4. A destra «Copia salvata»: il blocco in 3D, il nome, i valori in fila, «Cancella» e, sotto,
+   «Impostazioni».
+5. Prova blocchi diversi: un tronco, una lastra, una botola, un recinto, il grano, la «Libreria
+   cesellata» (voci «Libro 1», «Libro 2»...), il filo di redstone (segnale, 16 valori: gli spicchi
+   restano leggibili), la pietra e il «Blocco sonoro» (compare «Niente da cambiare»). Il primo sguardo
+   al filo di redstone non deve bloccare il gioco.
+6. Segnala ogni voce che cambia qualcosa a vista e non compare, o che compare e non cambia niente.
+7. Se hai un blocco di un'altra mod con più di 14 voci, nella finestra più piccola l'elenco scorre
+   insieme alla rotella, con una barra a lato; l'elenco «Stati da incollare» scorre già sopra le 11.
+8. «Cancella»: la copia sparisce subito e il tasto resta spento.
+9. Accendi della TNT sotto un blocco con una camo, guardalo e apri il menu con Shift e clic destro:
    quando il blocco esplode il menu si chiude da solo.
-6. Cambia un valore sulla «Copia salvata», poi clic destro su una pietra: prende il valore scelto.
-7. Premi F3 e T, aspetta, riapri il menu: le voci ci sono ancora e i blocchi si disegnano bene.
+10. Cambia un valore sulla «Copia salvata», chiudi, poi clic destro su una pietra: prende il valore
+    scelto.
+11. Premi F3 e T, aspetta, riapri il menu: le voci ci sono ancora e i blocchi si disegnano bene.
 
-### Il pannello
+### Le impostazioni
 
-1. In alto: il blocco copiato in 3D, il suo nome e il tipo di Camo Block. Senza copia: «Nessuna
-   copia».
-2. «Cancella copia»: la copia sparisce subito, con la sua ruota, e anche l'elenco delle spunte. Il
-   tasto resta spento. Chiudi, copia di nuovo e riapri: le spunte ci sono tutte.
-3. Passa il mouse su ogni voce: compare una breve spiegazione.
-4. Cambia più voci in fretta, anche più volte la stessa: ogni voce mostra subito la scelta, non torna
-   indietro e non lampeggia. Chiudi e riapri: le scelte sono rimaste. Esci dal mondo e rientra: sono
-   ancora lì. Su un server, prova anche questo.
-5. Tieni il menu aperto con Alt, cambia una voce con un clic, rilascia Alt con il mouse sopra il
-   pannello: la voce è cambiata e la ruota non ha applicato niente.
-6. Copia una camo di «Libreria cesellata»: nella finestra appena aperta l'elenco «Stati da incollare» non sta
-   tutto nel pannello. Scorre con la rotella quando il mouse è sul pannello, con una barra a lato, e
-   l'ultima voce si raggiunge.
+Chiudi il menu e fai la prova indicata. Alla fine rimetti il valore di partenza. Passando il mouse su
+ogni riga compare una breve spiegazione. Cambia più voci in fretta, anche più volte la stessa: ogni
+tasto mostra subito la scelta e non torna indietro. Chiudi, riapri, esci dal mondo e rientra: le scelte
+sono rimaste. Su un server, prova anche questo.
 
-### Ogni interruttore
-
-Chiudi il menu e fai la prova indicata. Alla fine rimetti il valore di partenza.
-
-| Interruttore | Cosa fare | Cosa deve succedere |
+| Voce | Cosa fare | Cosa deve succedere |
 |---|---|---|
-| Incolla il tipo: No | copia una camo messa con lo Shape Retaining Camo Block e incolla su una camo normale | la camo resta normale; con Sì diventa dell'altro tipo |
-| Stati da incollare | copia scale rivolte a est, togli la spunta a «Direzione», incolla su una camo di scale rivolta a nord | resta a nord, le altre voci arrivano. Su un blocco senza camo la direzione è quella che avrebbe posando il blocco lì |
-| Camo trasparenti: No | guarda le camo con il Gimbal in mano | si vedono piene (vedi la tabella sopra) |
+| Tipo di Camo Block: Resta | copia una camo messa con lo Shape Retaining Camo Block e incolla su una camo normale | la camo resta normale; con «Copiato» diventa dell'altro tipo |
 | Direzione: Copiata | copia scale, girati, incolla | stessa direzione della copia |
 | Direzione: Dallo sguardo | copia scale, girati di un quarto di giro, incolla | la direzione è ruotata di un quarto di giro rispetto alla copia |
 | Direzione: Dalla faccia | copia un tronco, incolla su facce diverse | il tronco si orienta come se lo posassi su quella faccia |
+| Blocco della camo già presente: Sostituito | in sopravvivenza, con una copia di assi, un Camo Block vuoto e un'asse, incolla su una camo di pietra | la camo diventa di assi, spendi il Camo Block vuoto e l'asse, torna il Camo Block di pietra; con «Resta» cambiano solo le voci in comune, gratis |
+| Stati da incollare | copia scale rivolte a est, premi «Tutti», togli la spunta a «Direzione», «Indietro», incolla su una camo di scale rivolta a nord | il tasto dice «2 di 3»; la camo resta a nord, le altre voci arrivano. Su un blocco senza camo la direzione è quella che avrebbe posando il blocco lì |
+| Stati da incollare, senza copia | apri le impostazioni dopo «Cancella» | il tasto è spento e dice «Niente di copiato»; copiando di nuovo torna «Tutti» |
 | Forma: Collegati, Faccia, Riga, Colonna | con Ctrl, su un blocco di pietre 5 per 5 per 2 staccato dal resto | tutto il gruppo; solo il piano della faccia cliccata; una riga da sinistra a destra; una colonna dal basso in alto (in avanti sul pavimento) |
-| Max: 8, 16, 32, 64 | con Ctrl su più di 64 pietre unite | cambiano al massimo tanti blocchi quanti indicati |
-| Cambia blocco: Sì | in sopravvivenza, con una copia di assi, un Camo Block vuoto e un'asse, incolla su una camo di pietra | la camo diventa di assi, spendi il Camo Block vuoto e l'asse, torna il Camo Block di pietra; con No cambiano solo le voci in comune, gratis |
-| Anteprima: No | guarda un blocco con il Gimbal e una copia salvata | niente anteprima |
+| Quanti al massimo: 8, 16, 32, 64 | con Ctrl su più di 64 pietre unite | cambiano al massimo tanti blocchi quanti indicati |
+| Camo trasparenti: No | guarda le camo con il Gimbal in mano | si vedono piene (vedi la tabella sopra) |
+| Anteprima prima del clic: No | guarda un blocco con il Gimbal e una copia salvata | niente anteprima |
+
+Se sposti «Gimbal: più blocchi» su un altro tasto, il titolo del secondo gruppo dice il nuovo tasto.
 
 ## Anteprima
 
-Con una copia salvata e «Anteprima» su Sì, guarda un blocco con il Gimbal nella mano principale.
+Con una copia salvata e «Anteprima prima del clic» su Sì, guarda un blocco con il Gimbal nella mano
+principale.
 
 1. Sul blocco compare il risultato in trasparenza. Clic destro: quello che ottieni è quello che hai
    visto. Prova scale, lastre, tronchi, botole, blocco d'erba o foglie (il colore è quello del posto).
 2. Tieni Ctrl: l'anteprima copre tutti i blocchi della serie. Lascialo: torna a uno. Cambia forma e
-   massimo dal menu e controlla che l'anteprima li segua.
+   massimo dalle impostazioni e controlla che l'anteprima li segua.
 3. Con «Dallo sguardo» girati, con «Dalla faccia» guarda facce diverse: l'anteprima cambia di
    conseguenza.
 4. L'anteprima sparisce tenendo Shift, con il menu o l'inventario aperti, con F1, guardando il cielo,
-   togliendo il Gimbal di mano e dopo «Cancella copia».
+   togliendo il Gimbal di mano e dopo «Cancella».
 5. Su un blocco dove il clic non cambierebbe niente (la stessa camo con gli stessi valori) non compare
    niente.
 6. Con il Gimbal nell'altra mano l'anteprima non c'è.

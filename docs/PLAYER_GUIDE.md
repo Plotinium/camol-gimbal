@@ -30,37 +30,47 @@ A Camo Block already filled with a block works too, and the block inside it is l
 Both keys can be changed in the game's controls screen, under Camol Gimbal. Minecraft may mark them
 in red because other actions use the same keys. The Gimbal never breaks blocks.
 
-While you hold the Gimbal, camos are see-through, and a label shows the camo you are looking at.
+While you hold the Gimbal, camos are see-through, and a small box at the left edge of the screen shows
+the camo you are looking at: its block and its values.
 
 ## The menu
 
 Look at a camo and open the menu to change that camo. Open it while looking at the air, or at a block
 without a camo, to change your saved copy.
 
-- Point at a value in the wheel to choose it. Use the mouse wheel to move between states.
-- Holding Alt: release the key to apply. Shift and right click: left click a value to apply.
+- The list on the left shows every state of the block and its value. Click a row, or use the mouse
+  wheel, to pick the one the wheel in the middle shows.
+- Left click a value in the wheel to apply it. The menu stays open for the next change.
+- Holding Alt: point at a value and release the key to apply it and close.
 - Right click or Esc closes.
+- On the right are your saved copy, the button that clears it and the Settings button.
 
 ## Copy and paste
 
 Place a camo as usual, adjust it with the Gimbal, then copy it.
 
-- Pasting on a camo changes its state and type. It keeps its block, unless "Replace block" is on.
+- Pasting on a camo changes its state and type. It keeps its block, unless "Block of a camo already there" is set to Replaced.
 - Pasting on a block without a camo places a new one. It costs a Camo Block filled with that block,
   or an empty Camo Block plus the block. Either Camo Block type counts. Creative mode is free.
 - The copy stays in the Gimbal until you clear it from the menu.
 
-## Switches
+## Settings
 
-| Switch | What it does | Default |
+Press Settings in the menu. They stay saved in the Gimbal.
+
+| Setting | What it does | Default |
 |---|---|---|
-| Paste type | Pasting also changes the type of an existing camo | On |
-| States to paste | Untick a state to leave it as it is | All ticked |
-| See-through camos | Turn it off to see the final look with the Gimbal in hand | On |
+| **When you paste** | | |
+| Camo Block type | Copied: a camo already there takes the copied type. Keeps: it keeps its own | Copied |
 | Direction | Copied; turned as much as you turned since copying; or taken from the face you click | Copied |
-| Shape and Max | Which blocks Ctrl covers (connected, face, row, column) and how many, up to 64 | Connected, 64 |
-| Replace block | An existing camo also takes the copied block; you pay for it and get the old one back | Off |
-| Preview | Shows the result before you click | On |
+| Block of a camo already there | Keeps, or Replaced: you pay for the new camo and get the old one back | Keeps |
+| States to paste | Opens a list: untick a state to leave it as it is | All |
+| **With Ctrl, on many blocks** | | |
+| Shape | Connected, face, row or column | Connected |
+| At most | How many blocks one click changes: 8, 16, 32 or 64 | 64 |
+| **What you see** | | |
+| See-through camos | Turn it off to see the final look with the Gimbal in hand | Yes |
+| Preview before the click | Shows the result before you click | Yes |
 
 ## Other changes to Camol
 

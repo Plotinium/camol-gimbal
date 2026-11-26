@@ -9,11 +9,12 @@ package plotinium.camolgimbal.client;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,13 +34,12 @@ final class RadialWheel {
     private static final int INDICATOR = 0xC0CCCCCC;
     private static final int TEXT = 0xFFFFFF;
     private static final int VALUE_TEXT = 0xFFFF80;
-    private static final int DIM_TEXT = 0x909090;
     /** Above this many values the sectors are too narrow for a preview each. */
     private static final int MAX_PREVIEWS = 32;
     private static final float GAP_DEGREES = 1.0F;
     private static final float DEGREES_PER_SEGMENT = 4.0F;
-    /** Text over the previews. */
-    private static final float TEXT_DEPTH = 250;
+    private static final List<Direction> COMPASS = List.of(Direction.NORTH, Direction.EAST, Direction.SOUTH,
+            Direction.WEST, Direction.UP, Direction.DOWN);
 
     private final int centreX;
     private final int centreY;
@@ -65,13 +65,21 @@ final class RadialWheel {
         return outerRadius;
     }
 
-    /** The block in each value of one state, in the order of the values. */
+    /** The block in each value of one state, in the order of the sectors. */
     static <T extends Comparable<T>> List<BlockState> valuesOf(BlockState state, Property<T> property) {
+        List<T> ordered = new ArrayList<>(property.getPossibleValues());
+        // Directions go round the wheel as on a compass: north at the top, then east, south, west, up and down.
+        ordered.sort(Comparator.comparingInt(RadialWheel::compassPlace));
         List<BlockState> values = new ArrayList<>();
-        for (T value : property.getPossibleValues()) {
+        for (T value : ordered) {
             values.add(state.setValue(property, value));
         }
         return values;
+    }
+
+    /** Every other value keeps its own order. */
+    private static int compassPlace(Object value) {
+        return value instanceof Direction direction ? COMPASS.indexOf(direction) : 0;
     }
 
     /** The sector the mouse points at by its angle, or -1 when it is inside the ring's hole. */
@@ -121,7 +129,7 @@ final class RadialWheel {
 
         float middle = (innerRadius + outerRadius) / 2F;
         float arcLength = Mth.TWO_PI * middle / sectors;
-        float blockSize = Mth.clamp(Math.min(arcLength * 0.6F, (outerRadius - innerRadius) * 0.45F), 8F, 24F);
+        float blockSize = Mth.clamp(Math.min(arcLength * 0.7F, (outerRadius - innerRadius) * 0.6F), 8F, 28F);
         for (int i = 0; i < sectors; i++) {
             if (sectors > MAX_PREVIEWS && i != selected && (selected >= 0 || i != current)) {
                 continue;
@@ -132,32 +140,19 @@ final class RadialWheel {
         }
     }
 
-    /** In the hole: the state being changed, its value, and the states before and after it. */
-    void drawCentre(GuiGraphics graphics, Font font, @Nullable Component previous, Component name, Component value,
-            @Nullable Component next, @Nullable Component position) {
+    /** In the hole: the state being changed and the value pointed at, or the current one. */
+    void drawCentre(GuiGraphics graphics, Font font, Component name, Component value) {
+        int width = (int) (innerRadius * 1.7F);
+        List<Component> lines = Texts.wrap(font, value, width, 2);
+        int y = centreY - (lines.size() + 1) * font.lineHeight / 2 - 1;
         graphics.pose().pushPose();
-        graphics.pose().translate(0, 0, TEXT_DEPTH);
-        if (previous != null) {
-            line(graphics, font, previous, -28, DIM_TEXT);
-        }
-        line(graphics, font, name, -13, TEXT);
-        line(graphics, font, value, -1, VALUE_TEXT);
-        if (position != null) {
-            line(graphics, font, position, 10, DIM_TEXT);
-        }
-        if (next != null) {
-            line(graphics, font, next, 21, DIM_TEXT);
+        graphics.pose().translate(0, 0, BlockPreview.TEXT_DEPTH);
+        graphics.drawCenteredString(font, Texts.fit(font, name, width), centreX, y, TEXT);
+        for (Component line : lines) {
+            y += font.lineHeight + 1;
+            graphics.drawCenteredString(font, line, centreX, y, VALUE_TEXT);
         }
         graphics.pose().popPose();
-    }
-
-    /** One line centred in the hole, cut to the width the hole has at that height. */
-    private void line(GuiGraphics graphics, Font font, Component text, int offsetY, int color) {
-        int furthest = Math.max(Math.abs(offsetY), Math.abs(offsetY + font.lineHeight));
-        int radius = innerRadius - 4;
-        int width = furthest >= radius ? 0 : (int) (2 * Math.sqrt(radius * radius - furthest * furthest));
-        Component shown = Texts.fit(font, text, Math.max(width, innerRadius));
-        graphics.drawCenteredString(font, shown, centreX, centreY + offsetY, color);
     }
 
     /** A part of a ring between two angles, with a colour at each edge. */

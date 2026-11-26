@@ -122,36 +122,56 @@ write nothing and check no permission. Entry points for the preview: `CamoView` 
   client tick, only after a real press seen with no screen open: a key held after the menu closed
   repeats, and Minecraft counts each repeat as a click. `MenuHook` (Shift and right click) opens it
   to stay open.
-- The label (`client.CamoLabel`, a GUI layer above the crosshair): with a Gimbal in either hand and
-  the crosshair on a camo, the camo block, its type with Camol's item names, and the offered states,
-  with the addon's translations of state names and values where it has one. Hidden with F1 and while
-  a screen is open.
+- The label (D-21, `client.CamoLabel`, a GUI layer above the crosshair): with a Gimbal in either hand
+  and the crosshair on a camo, a box at the left edge at mid height with the block's item (the block
+  itself when it has none), its name, "Shape Retaining" for solid camos, and the offered states as one
+  compact line. At most 170 wide and 20 short of the screen's middle; wrapped, then cut. Hidden with
+  F1, F3 and any screen.
+- `client.StateText`: names and values with the addon's translations, else the plain name. A compact
+  entry is `state.camolgimbal.<state>.<value>` where that key exists ("Closed"), else "name: value" for
+  a boolean, a number or a one letter value, else the value alone.
 
 ## Menu and preview (`client`)
 
-- `GimbalMenuScreen` (adapted from Create, see `THIRD_PARTY_NOTICES.md`): the target is fixed at
-  opening, the camo in front or else the saved copy; the states are read live. It closes without a
-  Gimbal in hand, or when the target camo disappears or changes block. A packet goes only for a
-  sector whose value differs from the current one.
-- Held mode closes on `keyReleased` or `mouseReleased` of the menu key, and a tick polls GLFW for a
-  release that happened before the screen opened. A release applies nothing while the window is not
-  active (GLFW releases every key on focus loss) or before the mouse has moved since the opening.
+- `GimbalMenuScreen` (adapted from Create, see `THIRD_PARTY_NOTICES.md`): one screen with three pages
+  (`MainPage`, `SettingsPage`, `StateTicksPage`, each a `MenuPage` of boxes and vanilla buttons). The
+  target is fixed at opening, the camo in front or else the saved copy. It closes without a Gimbal in
+  hand, or when the target camo disappears or changes block; a right click or Esc closes from any page.
+  The page is built again when the edited block, the copy's state or the switches change.
+- A left click on a sector sends its value if it differs, and the menu stays. Held mode closes on
+  `keyReleased` or `mouseReleased` of the menu key, applying the sector the mouse points at (nothing in
+  the wheel's hole or over a box); a tick polls GLFW for a release that happened before the screen
+  opened, and a release applies nothing while the window is not active (GLFW releases every key on
+  focus loss). **Leaving the main page ends held mode**, so releasing the key never closes a page the
+  player went to.
+- `MainPage`: the state list, the wheel at the screen's centre (the side columns have equal widths) and
+  the saved copy. The mouse wheel moves the selection and the list follows it. Boxes keep clear of the
+  hotbar. With neither a camo nor a copy only the right column shows, in the middle.
 - `RadialWheel`: sectors in `RenderType.gui()`, previews with `BlockPreview`
-  (`BlockRenderDispatcher.renderSingleBlock`). The wheel is at the screen centre when it fits beside
-  the panel; else it moves left and the cursor is put on its centre (`glfwSetCursorPos`).
-- `GimbalPanel`: the copy, the clear button and the switches. Which Gimbal: the main hand else the
-  off hand, as the server. A change is sent at once and written on the client's stack too; from then
-  on the panel shows its own value, so an older update from the server changes nothing on screen. The
-  copy is read from the stack until it is cleared in this screen. A resize rebuilds from these.
+  (`BlockRenderDispatcher.renderSingleBlock`). Direction values go round as on a compass.
+- `MenuState`: what the pages show and send. Switches: the main hand's Gimbal else the off hand's, as
+  the server; a change is sent at once and written on the client's stack too, and from then on the menu
+  shows its own value. The copy is read from the stack until it is cleared in this screen. An edited
+  block state is shown for 40 ticks after the last edit, and the next edit starts from it, so an edit
+  made before the server's answer keeps the one before; a refused edit shows for those 2 seconds too.
 - `BlockLooks`: how a state looks for `VisibleStates` (render shape, quads per render type with seed
   42, tint without a world, outline and collision shapes), cached per block, cleared on resource
   reload. A block that throws keeps its states offered.
-- `GimbalPreview`: once per client tick it runs `Planner.plan` for a Gimbal in the main hand (from
-  the off hand the block's own action comes first), cut at `Payment.affordable`, when the switch is on, a block is targeted, not
-  sneaking, no screen open. Drawn at `AFTER_TRANSLUCENT_BLOCKS` with
+- `GimbalPreview`: once per client tick it runs `Planner.plan` for the Gimbal in the main hand, when the
+  switch is on, a block is targeted, not sneaking, no screen open, and cuts the result with
+  `server.Payment.affordable`. Drawn at `AFTER_TRANSLUCENT_BLOCKS` with
   `ModelBlockRenderer.tesselateWithoutAO` into `RenderType.translucentMovingBlock`, scaled 1.01
-  (Camol draws at 1.005), full light, reduced alpha. It ignores claims. A block whose model throws
-  while drawn is left out of the preview from then on and logged once per block.
+  (Camol draws at 1.005), full light, reduced alpha. It ignores claims. A block whose model fails to
+  draw is left out, logged once.
+
+## Visual check (development only)
+
+- The `visualClient` run (`gradlew visualCheck`, GameTest source set, folder `build/visual`, system
+  property `camolgimbal.visual`) plays `src/gametest/.../client/VisualCheck`: a new flat creative world,
+  camos, every screen state at GUI scales 3, 2 and 1 of a 1280x720 window, screenshots, a few checks of
+  clicks and releases made by calling the screen, the offered states of some blocks in the log, then it
+  quits. The pointer is written into `MouseHandler` by reflection. A watchdog halts it after 6 minutes.
+  The Gradle task fails unless the log ends with `visual check: ok`.
 
 ## Mixins
 

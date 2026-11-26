@@ -12,6 +12,7 @@ Adapted into:
 
 - `src/main/java/plotinium/camolgimbal/client/RadialWheel.java`
 - `src/main/java/plotinium/camolgimbal/client/GimbalMenuScreen.java`
+- `src/main/java/plotinium/camolgimbal/client/MainPage.java`
 
 No Create asset (texture, model, icon, sound or text) is included.
 
