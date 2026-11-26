@@ -1,0 +1,140 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.147'
+    id 'idea'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = "${mod_id}-${minecraft_version}"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+// GameTests live in their own source set, so the jar players install does not carry them.
+sourceSets {
+    gametest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+repositories {
+    exclusiveContent {
+        forRepository { maven { name = 'CurseMaven'; url = 'https://cursemaven.com' } }
+        filter { includeGroup 'curse.maven' }
+    }
+    exclusiveContent {
+        forRepository { maven { name = 'CreateMod'; url = 'https://maven.createmod.net' } }
+        filter { includeGroup 'com.simibubi.create' }
+    }
+    exclusiveContent {
+        forRepository { maven { name = 'FTB'; url = 'https://maven.ftb.dev/releases' } }
+        filter { includeGroup 'dev.ftb.mods' }
+    }
+    exclusiveContent {
+        forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
+}
+
+neoForge {
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
+    runs {
+        client {
+            client()
+            sourceSet = sourceSets.gametest
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        server {
+            server()
+            programArgument '--nogui'
+            gameDirectory = project.file('run/server')
+        }
+        gameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            gameDirectory = project.file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        configureEach {
+            logLevel = org.slf4j.event.Level.INFO
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+            sourceSet(sourceSets.gametest)
+        }
+    }
+}
+
+neoForge.addModdingDependenciesTo(sourceSets.gametest)
+
+configurations {
+    // In the runs only: not required from people who install the mod.
+    localRuntime
+    runtimeClasspath.extendsFrom localRuntime
+    gametestImplementation.extendsFrom implementation
+    gametestRuntimeClasspath.extendsFrom localRuntime
+}
+
+// -PwithoutIntegrations leaves Create and FTB Chunks out of the runs.
+def withIntegrations = !project.hasProperty('withoutIntegrations')
+
+dependencies {
+    implementation "curse.maven:camol-${camol_project}:${camol_file}"
+
+    if (withIntegrations) {
+        localRuntime("com.simibubi.create:create-${minecraft_version}:${create_version}") { transitive = false }
+        localRuntime("dev.ftb.mods:ftb-chunks-neoforge:${ftb_chunks_version}") { transitive = false }
+        localRuntime("dev.ftb.mods:ftb-library-neoforge:${ftb_library_version}") { transitive = false }
+        localRuntime("dev.ftb.mods:ftb-teams-neoforge:${ftb_teams_version}") { transitive = false }
+        localRuntime "maven.modrinth:architectury-api:${architectury_version}"
+    }
+}
+
+var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
+    var replaceProperties = [
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            loader_version_range   : loader_version_range,
+            camol_version_range    : camol_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from 'src/main/templates'
+    into 'build/generated/sources/modMetadata'
+}
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('jar', Jar) {
+    from('LICENSE', 'THIRD_PARTY_NOTICES.md')
+}
+
+// Every GameTest run starts from a new world: a killed run leaves blocks that would fail the next one.
+tasks.register('cleanGameTestWorld', Delete) {
+    delete 'run/gametest/world'
+}
+tasks.named('runGameTestServer') {
+    dependsOn 'cleanGameTestWorld'
+}

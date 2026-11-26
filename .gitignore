@@ -1,0 +1,15 @@
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+run/
+libs/
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+.vscode/
+.eclipse/
+bin/
+.DS_Store
+graphify-out/
