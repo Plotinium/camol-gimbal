@@ -59,8 +59,14 @@ public final class GimbalActions {
         ServerLevel level = player.serverLevel();
         CamoView view = CamoView.of(level);
         GimbalSettings settings = GimbalItem.settings(gimbal);
+        boolean series = SeriesKeys.isHeld(player);
         List<Planner.Change> changes = Planner.plan(level, view, player, copy, settings, hit, player.getDirection(),
-                SeriesKeys.isHeld(player));
+                series);
+        if (changes.isEmpty()) {
+            // The clicked camo is already like the copy, or the clicked block cannot take a camo.
+            Messages.quiet(player, view.camoAt(hit.pos()) != null ? Messages.ALREADY_LIKE_COPY : Messages.CANNOT_TAKE_CAMO);
+            return Outcome.NOTHING;
+        }
 
         boolean free = player.hasInfiniteMaterials();
         int refused = 0;
@@ -113,7 +119,13 @@ public final class GimbalActions {
             if (written == 0) {
                 Messages.show(player, Messages.REFUSED);
             } else {
-                Messages.show(player, Messages.REFUSED_SOME, refused);
+                Messages.show(player, Messages.REFUSED_SOME, written, refused);
+            }
+        } else if (written > 0) {
+            if (series) {
+                Messages.success(player, Messages.BLOCKS_CHANGED, written);
+            } else {
+                Messages.success(player, Messages.PASTED, writes.values().iterator().next().state().getBlock().getName());
             }
         }
         return new Outcome(written, refused, unpaid != null);
@@ -135,6 +147,7 @@ public final class GimbalActions {
             return false;
         }
         gimbal.set(ModRegistry.COPY, new SavedCopy(camo.camoType(), camo.state(), player.getDirection()));
+        Messages.success(player, Messages.COPIED, camo.state().getBlock().getName());
         return true;
     }
 
@@ -166,6 +179,7 @@ public final class GimbalActions {
                 giveBack(player, camo);
             }
         }
+        Messages.success(player, Messages.REMOVED, camo.state().getBlock().getName());
         return true;
     }
 
@@ -189,6 +203,7 @@ public final class GimbalActions {
             return false;
         }
         CamoHelper.setCamo(level, Map.of(pos.immutable(), new CamoPosition(camo.camoType(), edited)));
+        Messages.success(player, Messages.CAMO_EDITED, edited.getBlock().getName());
         return true;
     }
 
@@ -200,6 +215,7 @@ public final class GimbalActions {
             return false;
         }
         gimbal.set(ModRegistry.COPY, copy.withState(state));
+        Messages.success(player, Messages.COPY_EDITED, state.getBlock().getName());
         return true;
     }
 
@@ -213,6 +229,7 @@ public final class GimbalActions {
         GimbalSettings s = GimbalItem.settings(gimbal);
         storeSettings(gimbal, new GimbalSettings(s.pasteType(), java.util.Set.of(), s.seeThrough(), s.direction(),
                 s.shape(), s.limit(), s.replaceBlock(), s.preview()));
+        Messages.success(player, Messages.COPY_CLEARED);
         return true;
     }
 

@@ -6,7 +6,7 @@
   "message.camolgimbal.items_missing": "Missing: %1$s with %2$s, or an empty %1$s and one %2$s",
   "message.camolgimbal.series_stopped": "Blocks changed: %s. You ran out of items",
   "message.camolgimbal.refused": "You cannot change this block",
-  "message.camolgimbal.refused_some": "Skipped: %s. You cannot change those blocks",
+  "message.camolgimbal.refused_some": "Blocks changed: %1$s. Skipped: %2$s, you cannot change those blocks",
   "key.categories.camolgimbal": "Camol Gimbal",
   "key.camolgimbal.menu": "Gimbal menu (hold)",
   "key.camolgimbal.series": "Gimbal: many blocks (hold)",
@@ -98,5 +98,14 @@
   "menu.camolgimbal.preview": "Preview",
   "menu.camolgimbal.preview.tooltip": "Shows the result before you click.",
   "menu.camolgimbal.states": "States to paste",
-  "menu.camolgimbal.states.tooltip": "Ticked: pasted from the copy."
+  "menu.camolgimbal.states.tooltip": "Ticked: pasted from the copy.",
+  "message.camolgimbal.copied": "Copied: %s",
+  "message.camolgimbal.pasted": "Pasted: %s",
+  "message.camolgimbal.blocks_changed": "Blocks changed: %s",
+  "message.camolgimbal.already_like_copy": "This camo is already like the copy",
+  "message.camolgimbal.cannot_take_camo": "This block cannot take a camo",
+  "message.camolgimbal.removed": "Camo removed: %s",
+  "message.camolgimbal.camo_edited": "Camo changed: %s",
+  "message.camolgimbal.copy_edited": "Copy changed: %s",
+  "message.camolgimbal.copy_cleared": "Copy cleared"
 }

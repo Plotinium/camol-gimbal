@@ -36,12 +36,15 @@ contains:
 
 - **Rejected:** addon only, or proposal only.
 
-## D-4 - The state is picked in a radial menu
+## D-4 - The state is picked in a radial menu with every state in sight
 
-Based on the logic of Create's radial wrench menu: one property at a time, a 3D preview of each
-value, the mouse wheel changes property.
+Based on the logic of Create's radial wrench menu: the wheel shows the values of one state, each with
+a 3D preview. A list beside the wheel shows every state with its current value; a click on the list,
+or the mouse wheel, picks which state the wheel shows.
 
-- **Rejected:** a debug stick style cycle, and rotation on the clicked face.
+- **Rejected:** one state at a time with the others reachable only by the mouse wheel (they go
+  unnoticed); a list with a button for each value and no wheel (long for blocks with many values); a
+  debug stick style cycle; rotation on the clicked face.
 
 ## D-5 - Only the Gimbal item
 
@@ -153,19 +156,23 @@ gives nothing back.
 
 The menu edits what is in front of the player.
 
-- On a camouflage, the wheel shows and changes that camo's current state, as Create's wrench does.
-  The saved copy stays as it is, shown in the side panel.
-- In the air, or on a block without a camouflage, the wheel shows and changes the saved copy, which
-  the next right click applies.
-- The side panel has the saved copy, a button that clears it, and the switches (D-19). The copy and
-  the switches stay saved in the Gimbal. With nothing saved and no camo in front, the menu shows the
-  panel alone.
-- Held open with left Alt, it behaves as Create's: releasing the key applies the selection. Opened
+- On a camouflage, it shows and changes that camo's current state, as Create's wrench does. The saved
+  copy stays as it is.
+- In the air, or on a block without a camouflage, it shows and changes the saved copy, which the next
+  right click applies.
+- The main page has the state list on the left, the wheel in the middle, and on the right the saved
+  copy with its values, the button that clears it and the button that opens the settings page. With
+  nothing saved and no camo in front, it says so and keeps the two buttons.
+- The settings page holds the switches (D-19) in three groups: when you paste; with the series key,
+  on many blocks; what you see. A button goes back. The copy and the switches stay saved in the
+  Gimbal.
+- Held open with left Alt, releasing the key applies the value the mouse points at and closes. Opened
   with Shift and right click, it stays open.
-- In both, the wheel changes state, a left click on a sector applies and closes, a left click on the
-  panel uses that control, and a right click or Esc closes.
+- In both, a left click on a sector applies it and leaves the menu open for the next change, and a
+  right click or Esc closes.
 
-- **Rejected:** the saved copy takes priority over the camo looked at.
+- **Rejected:** the saved copy takes priority over the camo looked at; the switches in a side panel on
+  the main page (too crowded to understand).
 
 ## D-19 - The switches
 
@@ -187,6 +194,15 @@ used. The mod page icon is the same drawing.
 
 - **Rejected:** a round sceptre with three colours; using Camol's texture; a 16x16 drawing, too small
   for the face and the tongs.
+
+## D-21 - On screen label and messages
+
+- While a Gimbal is held and a camo is looked at, a small box at the left edge, at mid height, shows
+  the block's icon and name and its states in one compact line; Shape Retaining camos say so.
+- Every action says what it did on the action bar: copied, pasted, blocks changed, removed, edited,
+  copy cleared, nothing to change, refused.
+
+- **Rejected:** a column of lines under the crosshair, which covers the view.
 
 ## Constraints
 

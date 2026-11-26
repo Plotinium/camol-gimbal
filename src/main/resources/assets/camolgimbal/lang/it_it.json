@@ -6,7 +6,7 @@
   "message.camolgimbal.items_missing": "Mancano: %1$s con %2$s, oppure %1$s vuoto più %2$s",
   "message.camolgimbal.series_stopped": "Blocchi cambiati: %s. Hai finito gli oggetti",
   "message.camolgimbal.refused": "Non puoi modificare questo blocco",
-  "message.camolgimbal.refused_some": "Saltati: %s. Non puoi modificare quei blocchi",
+  "message.camolgimbal.refused_some": "Blocchi cambiati: %1$s. Saltati: %2$s, non puoi modificarli",
   "key.categories.camolgimbal": "Camol Gimbal",
   "key.camolgimbal.menu": "Menu del Gimbal (tieni premuto)",
   "key.camolgimbal.series": "Gimbal: più blocchi (tieni premuto)",
@@ -98,5 +98,14 @@
   "menu.camolgimbal.preview": "Anteprima",
   "menu.camolgimbal.preview.tooltip": "Mostra il risultato prima del clic.",
   "menu.camolgimbal.states": "Stati da incollare",
-  "menu.camolgimbal.states.tooltip": "Con la spunta: viene incollato dalla copia."
+  "menu.camolgimbal.states.tooltip": "Con la spunta: viene incollato dalla copia.",
+  "message.camolgimbal.copied": "Copiato: %s",
+  "message.camolgimbal.pasted": "Incollato: %s",
+  "message.camolgimbal.blocks_changed": "Blocchi cambiati: %s",
+  "message.camolgimbal.already_like_copy": "Questa camo è già come la copia",
+  "message.camolgimbal.cannot_take_camo": "Questo blocco non può avere una camo",
+  "message.camolgimbal.removed": "Camo tolta: %s",
+  "message.camolgimbal.camo_edited": "Camo modificata: %s",
+  "message.camolgimbal.copy_edited": "Copia modificata: %s",
+  "message.camolgimbal.copy_cleared": "Copia cancellata"
 }

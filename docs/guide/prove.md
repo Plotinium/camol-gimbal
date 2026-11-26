@@ -115,6 +115,19 @@ In sopravvivenza e poi in creativa, con il Gimbal nella mano principale:
 5. Nella prova con `.\gradlew.bat runClient` la spugna non accetta camo: lo vuole una prova
    automatica, non è un difetto.
 
+### Messaggi sulla barra in basso
+
+Ogni clic con il Gimbal scrive cosa ha fatto, sopra la barra degli oggetti, con il nome del blocco
+nella lingua del gioco.
+
+1. Clic sinistro su una camo: «Copiato: ...». Shift e clic sinistro: «Camo tolta: ...».
+2. Clic destro su una pietra: «Incollato: ...». Tieni premuto il tasto destro sullo stesso blocco: il
+   messaggio resta «Incollato», non diventa «Questa camo è già come la copia».
+3. Lascia il tasto e fai di nuovo clic destro sullo stesso blocco: «Questa camo è già come la copia».
+4. Con Ctrl su una fila: «Blocchi cambiati: ...» con il numero.
+5. Dal menu: cambiare la camo, cambiare la copia e cancellare la copia scrivono ciascuno il suo
+   messaggio; cambiare un interruttore non scrive niente.
+
 ### Etichetta
 
 1. Con il Gimbal in mano, guarda un blocco con una camo: sotto il mirino compaiono il blocco, il tipo
