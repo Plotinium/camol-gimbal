@@ -179,6 +179,15 @@ The menu edits what is in front of the player.
 | Replace the block | On an existing camo the block changes too: the new camo is paid for (D-17), then the old one returns to the inventory, or drops at the player if it is full | off |
 | Preview | Shows the result, on every block it would change, before the click | on |
 
+## D-20 - The look of the Gimbal
+
+A lilac blob like the one on Camol's items, squeezed at the waist by round golden tongs on an iron
+handle: the camo caught and bent to the player's will. It is our own 32x32 drawing; no Camol file is
+used. The mod page icon is the same drawing.
+
+- **Rejected:** a round sceptre with three colours; using Camol's texture; a 16x16 drawing, too small
+  for the face and the tongs.
+
 ## Constraints
 
 - A Camol fix made by the addon steps aside when Camol has already handled the case (for example,

@@ -43,6 +43,9 @@ Two related details in `EventHandler.playerTick`:
 
 Would you accept a pull request for either of these?
 
+One more thing: the addon's item and icon show a blob inspired by yours, drawn from scratch, held by a
+pair of tongs. If you would rather it did not, tell me and I will change it.
+
 ## After it is opened
 
 If Camol takes the first change, the addon's setting `followClickedFace` can be removed in a later
