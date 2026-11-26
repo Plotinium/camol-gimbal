@@ -69,11 +69,18 @@ nothing, write nothing and check no permission.
 
 ## Mixins
 
-- See-through: in `ClientTickEvent.Post` the addon computes one value for the local player, Camol's
-  main-hand camo item or a Gimbal in either hand with the switch on, and writes it to
-  `ClientEventHandler.shouldBeTransparent`. A mixin (`require = 0`) makes Camol's section drawing,
-  which reads only the main hand, use that flag. If the target is missing, the client logs one
-  warning at start.
+- Config `camolgimbal.mixins.json`, declared in `neoforge.mods.toml`, with the plugin
+  `CamolGimbalMixinPlugin`.
+- See-through (`client.SeeThroughClient`, `mixin.CamolDrawingMixin`): in `ClientTickEvent.Post` the
+  addon computes one value for the local player with `item.SeeThrough` (Camol's main-hand camo item,
+  or a Gimbal in either hand with the switch on), keeps it in a volatile field of its own and copies
+  it into `ClientEventHandler.shouldBeTransparent`, which drives Camol's rebuild of the camouflaged
+  sections. The mixin (`@ModifyVariable` on the only boolean local of
+  `lambda$geometryEvent$5`, `require = 0`, client only) makes Camol's section drawing use the
+  addon's field, not Camol's flag: sections are built on worker threads, and Camol's
+  `PlayerTickEvent.Post` handler rewrites its flag during the tick once per client player, remote
+  ones included. If the handler is not reached, the plugin logs one warning when Camol's class loads
+  at client start.
 - `LevelChunk.setBlockState`, a very hot path, checks in this order: server side; the new state is
   air, a liquid block or a moving piston; the chunk `hasData`; only then the key. A position with a
   camo is put in a concurrent queue (other mods write blocks from other threads). At the end of the

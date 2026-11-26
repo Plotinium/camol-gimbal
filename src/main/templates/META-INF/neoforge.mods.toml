@@ -11,6 +11,9 @@ description='''
 An addon for Camol: a tool that turns and reshapes camouflaged blocks.
 '''
 
+[[mixins]]
+config="camolgimbal.mixins.json"
+
 [[dependencies.${mod_id}]]
 modId="neoforge"
 type="required"

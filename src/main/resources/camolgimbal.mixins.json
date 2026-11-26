@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "plotinium.camolgimbal.mixin",
+  "plugin": "plotinium.camolgimbal.mixin.CamolGimbalMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+  ],
+  "client": [
+    "CamolDrawingMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

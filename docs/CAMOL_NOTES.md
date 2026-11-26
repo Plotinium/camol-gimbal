@@ -58,10 +58,15 @@ affected.
 - The see-through drawing is decided inside the synthetic method
   `ClientEventHandler.lambda$geometryEvent$5`, by two `ItemStack.is(Holder)` calls on the main hand
   item. Another item counts only through a mixin there. **A Camol update can rename that method.**
-- A held tool therefore needs that mixin, plus code that sets the flag. To verify at plan time:
-  `PlayerTickEvent.Post` probably fires for remote players too, so a later player tick can
-  overwrite the flag. `ClientTickEvent.Post`, checking the local player, runs after all entity ticks
-  and is the candidate.
+- A held tool therefore needs that mixin, plus code that sets the flag.
+- `PlayerTickEvent.Post` fires for remote players too (`RemotePlayer.tick` calls `super.tick`), so
+  on a server with other players the last player ticked sets the flag. `ClientTickEvent.Post` fires
+  at the end of `Minecraft.tick`, after `ClientLevel.tickEntities`, and before the frame is drawn
+  (verified 2026-11-26, NeoForge 21.1.251 sources).
+- The off-hand check counts a solid camo item, but the drawing reads only the main hand: the
+  sections are rebuilt and stay opaque.
+- Section geometry, and with it the lambda, is built in `SectionRenderDispatcher` rebuild tasks on
+  worker threads (verified 2026-11-26).
 
 ## Limit of the drawing
 
