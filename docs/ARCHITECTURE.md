@@ -77,10 +77,14 @@ permission. Entry points for the preview: `CamoView` (a lambda over the client m
   own action). With sneak it opens the menu on the client and does nothing on the server. In air only
   sneak does something. The item always consumes the click on a block. The menu opens through
   `item.MenuHook`: common code holds a no-op opener, the client sets the real one at setup.
-- Left click: while the Gimbal is in the main hand the client cancels the attack input on a block,
-  every time: the event fires on the press and again on every tick the button is held. The packet
-  `LeftClickPayload(pos, face, remove)` goes only on the change from released to pressed, tracked by
-  the mod, with `remove` set from Shift as the client saw it. `canAttackBlock` is false as a
+- Left click (`client.GimbalInput`): while the Gimbal is in the main hand and the crosshair is on a
+  block, the client cancels `InputEvent.InteractionKeyMappingTriggered` for the attack, every time:
+  it fires from `startAttack` on the press and from `continueAttack` on every tick the button is
+  held. The packet `LeftClickPayload(pos, face, remove)` goes only for a real press: a raw press of
+  the attack binding with no screen open arms one packet, the next block attack input spends it, and
+  the end of the client tick disarms it. Closing a screen with the button held sends nothing
+  (`MouseHandler.grabMouse` sets the binding down again without a press). `remove` is Shift as the
+  client saw it. Entities and the air are left to vanilla. `canAttackBlock` is false as a
   backstop. The server does not post `PlayerInteractEvent.LeftClickBlock`: `CommonHooks.onLeftClickBlock`
   posts it to every server listener, which would bring back the click the client suppresses; claims
   answer through the place event.
@@ -89,8 +93,21 @@ permission. Entry points for the preview: `CamoView` (a lambda over the client m
   `EditCopyPayload(state)`, `ClearCopyPayload.INSTANCE`, `SettingsPayload(settings)`. The server
   never takes a block from the client: an edited state must have the block of the stored camo or of
   the saved copy; a menu edit never changes `waterlogged`. Settings are clamped when decoded.
-- Key mappings: menu (left Alt) and series (left Ctrl).
-- The menu opens client side.
+- Key mappings (`client.GimbalKeys`, category `key.categories.camolgimbal`): menu (left Alt) and
+  series (left Ctrl), context `IN_GAME`. NeoForge presses every mapping bound to a key, so left Ctrl
+  presses sprint too and left Alt presses Create's wrench menu too (read in
+  `KeyMappingLookup.getAll` of the NeoForge 21.1.251 sources, not tried in game). A narrower context would not help: a context that
+  does not conflict with `IN_GAME` makes `KeyModifier.NONE` inactive while Ctrl or Alt is down, and
+  the mapping is never down. While a screen is open the mappings are inactive, so the menu screen
+  matches the menu key in `keyReleased`.
+- The series state is polled in `ClientTickEvent.Pre`, before the tick's use packet, and sent on
+  change; a screen opening releases it, and logging out resets it.
+- The menu key, on each click, calls `MenuHook.open` with the main hand Gimbal, else the off hand,
+  and the targeted block or null. The menu opens client side.
+- The label (`client.CamoLabel`, a GUI layer above the crosshair): with a Gimbal in either hand and
+  the crosshair on a camo, the camo block, its type with Camol's item names, and its states except
+  `waterlogged`, with the addon's translations of state names and values where it has one. Hidden
+  with F1 and while a screen is open.
 
 ## Mixins
 
@@ -106,10 +123,19 @@ permission. Entry points for the preview: `CamoView` (a lambda over the client m
   `PlayerTickEvent.Post` handler rewrites its flag during the tick once per client player, remote
   ones included. If the handler is not reached, the plugin logs one warning when Camol's class loads
   at client start.
-- `LevelChunk.setBlockState`, a very hot path, checks in this order: server side; the new state is
+- `mixin.LevelChunkMixin` on `LevelChunk.setBlockState` (at return, only when the block really
+  changed) calls `server.LostCamos`, which checks in this order: server level; the new state is
   air, a liquid block or a moving piston; the chunk `hasData`; only then the key. A position with a
-  camo is put in a concurrent queue (other mods write blocks from other threads). At the end of the
-  level tick, if it is still empty and the camo is still there, the camo drops and is cleared. The
-  delay lets Camol move a camo itself.
-- Camol `CamoItem.useOn`: the placement state comes from `Placement` when the server setting is on
-  (`require = 0`).
+  camo is put in a concurrent queue per dimension (other mods write blocks from other threads). At
+  the end of the level tick, if it is loaded, still empty and the camo is still there, the camo is
+  cleared and drops with `Block.popResource` (so `doTileDrops` applies). The delay steps aside for
+  Camol: a player break clears the camo on `BreakEvent` before the block goes, and Camol's Sable
+  mixin calls `moveCamo` at the end of `moveBlocks`, after the blocks moved. A block removed and
+  placed again within the tick keeps its camo.
+- `mixin.CamoItemMixin`, a MixinExtras `@WrapOperation` (`require = 0`) on the
+  `Block.getStateForPlacement` call in Camol's `CamoItem.useOn`: with the server setting
+  `followClickedFace` on (`Config`, default on), the state comes from `Placement` with the real
+  click; off, Camol's own context. A Camol that passes the real click gets the same answer.
+- The plugin checks each `require = 0` mixin after it applies: the drawing mixin by the call to its
+  handler, the camo item mixin by the call it wraps (MixinExtras applies wraps after the plugin
+  runs). A miss logs one warning when the target class loads.

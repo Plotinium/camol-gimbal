@@ -5,6 +5,8 @@
   "plugin": "plotinium.camolgimbal.mixin.CamolGimbalMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "CamoItemMixin",
+    "LevelChunkMixin"
   ],
   "client": [
     "CamolDrawingMixin"

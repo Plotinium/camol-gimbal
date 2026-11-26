@@ -25,7 +25,7 @@ public final class MenuHook {
         opener = newOpener;
     }
 
-    static void open(InteractionHand hand, @Nullable BlockHitResult hit) {
+    public static void open(InteractionHand hand, @Nullable BlockHitResult hit) {
         opener.open(hand, hit);
     }
 }
