@@ -17,7 +17,7 @@ import plotinium.camolgimbal.CamolGimbal;
 import plotinium.camolgimbal.data.SavedCopy;
 import plotinium.camolgimbal.server.GimbalActions;
 
-/** Replace the block (D-19, plan task 8): the new camo is paid for, the old one comes back once. */
+/** Replace the block (D-19): the new camo is paid for, the old one comes back once. */
 @GameTestHolder(CamolGimbal.MOD_ID)
 @PrefixGameTestTemplate(false)
 public final class ReplaceTests {

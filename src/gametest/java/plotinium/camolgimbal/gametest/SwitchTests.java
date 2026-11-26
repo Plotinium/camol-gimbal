@@ -23,7 +23,7 @@ import plotinium.camolgimbal.data.SavedCopy;
 import plotinium.camolgimbal.data.SeriesShape;
 import plotinium.camolgimbal.server.GimbalActions;
 
-/** The switches of D-19 that change what apply writes (plan task 6): type, states, direction. */
+/** The switches of D-19 that change what apply writes: type, states, direction. */
 @GameTestHolder(CamolGimbal.MOD_ID)
 @PrefixGameTestTemplate(false)
 public final class SwitchTests {

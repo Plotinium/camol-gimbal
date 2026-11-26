@@ -17,7 +17,7 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import plotinium.camolgimbal.CamolGimbal;
 import plotinium.camolgimbal.data.SavedCopy;
 
-/** D-12 (plan task 10): a camo drops once when its block disappears, and stays when the block only changes. */
+/** D-12: a camo drops once when its block disappears, and stays when the block only changes. */
 @GameTestHolder(CamolGimbal.MOD_ID)
 @PrefixGameTestTemplate(false)
 public final class LostCamoTests {

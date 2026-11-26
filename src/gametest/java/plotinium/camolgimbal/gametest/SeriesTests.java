@@ -17,7 +17,7 @@ import plotinium.camolgimbal.data.SeriesShape;
 import plotinium.camolgimbal.server.GimbalActions;
 import plotinium.camolgimbal.server.SeriesKeys;
 
-/** Many blocks (D-11, plan task 7): shapes, limits, running out of items, a protected block inside. */
+/** Many blocks (D-11): shapes, limits, running out of items, a protected block inside. */
 @GameTestHolder(CamolGimbal.MOD_ID)
 @PrefixGameTestTemplate(false)
 public final class SeriesTests {

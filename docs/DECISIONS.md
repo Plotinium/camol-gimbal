@@ -1,8 +1,7 @@
 # Camol Gimbal - decisions
 
 An addon for the Camol mod: a tool that changes the pose and look of a camouflage.
-How Camol works inside: `CAMOL_NOTES.md`. How Create's radial menu works:
-`CREATE_RADIAL_MENU.md`.
+How Camol works inside: `CAMOL_NOTES.md`. How the code is put together: `ARCHITECTURE.md`.
 
 ## D-1 - The tool changes the states the block already has
 

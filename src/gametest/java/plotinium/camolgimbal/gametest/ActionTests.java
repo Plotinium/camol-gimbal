@@ -24,7 +24,7 @@ import plotinium.camolgimbal.registry.ModRegistry;
 import plotinium.camolgimbal.server.GimbalActions;
 import plotinium.camolgimbal.server.Permissions;
 
-/** Copy, remove and apply on one block, with and without permission (plan task 3). */
+/** Copy, remove and apply on one block, with and without permission. */
 @GameTestHolder(CamolGimbal.MOD_ID)
 @PrefixGameTestTemplate(false)
 public final class ActionTests {

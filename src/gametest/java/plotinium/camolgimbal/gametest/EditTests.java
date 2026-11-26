@@ -28,7 +28,7 @@ import plotinium.camolgimbal.data.SeriesShape;
 import plotinium.camolgimbal.registry.ModRegistry;
 import plotinium.camolgimbal.server.GimbalActions;
 
-/** The menu packets (plan task 5): a state of another block is refused, in the world and in the copy. */
+/** The menu packets: a state of another block is refused, in the world and in the copy. */
 @GameTestHolder(CamolGimbal.MOD_ID)
 @PrefixGameTestTemplate(false)
 public final class EditTests {

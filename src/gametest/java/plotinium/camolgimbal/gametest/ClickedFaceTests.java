@@ -23,7 +23,7 @@ import plotinium.camolgimbal.CamolGimbal;
 import plotinium.camolgimbal.Config;
 
 /**
- * D-13 (plan task 11): Camol's camo item places the camouflage as placing the block on the clicked face would, with
+ * D-13: Camol's camo item places the camouflage as placing the block on the clicked face would, with
  * air in front of the clicked face. The player faces north. With the server setting off, Camol's own placement.
  */
 @GameTestHolder(CamolGimbal.MOD_ID)
