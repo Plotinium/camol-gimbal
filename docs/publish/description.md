@@ -31,6 +31,8 @@ Create's wrench menu (MIT license). No Create files are included and Create is n
 
 - Summary: A tool that turns and reshapes Camol camouflages.
 - License: MIT.
+- Source: <https://github.com/Plotinium/camol-gimbal>.
+- Issues: <https://github.com/Plotinium/camol-gimbal/issues>.
 - Author: Plotinium.
 - Required dependency: Camol.
 - Environment: client and server.
