@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_camo": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "camol:camo_item"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "camolgimbal:gimbal"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_camo"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "camolgimbal:gimbal"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "camol:camo_item"
+    },
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "pattern": [
+    " GC",
+    " IG",
+    "I  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "camolgimbal:gimbal"
+  }
+}
