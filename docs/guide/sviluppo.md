@@ -36,6 +36,18 @@ La lista di cosa controllare in gioco è in [prove.md](prove.md).
 | `src\main\resources\camolgimbal_logo.png` | 512x512 | l'immagine nell'elenco delle mod |
 | `docs\publish\icon-400.png` | 400x400 | l'icona per CurseForge |
 
+I disegni da usare come riferimento o da cui ripartire stanno in `docs\art\`. In ogni cartella:
+`gimbal.png` (32x32, quello da modificare), `preview.png` (ingrandito su grigio, solo da guardare) e
+`draw.py` (il programma che lo ha generato: non serve per disegnare a mano).
+
+| Cartella | Disegno |
+|---|---|
+| `docs\art\1-rod` | asta con anello aperto |
+| `docs\art\2-tongs` | pinza con le due ganasce, non in linea |
+| `docs\art\3-tongs-aligned` | pinza in linea, con la sola ganascia davanti: **è quella usata dalla mod** |
+
+Per usarne un altro nel gioco, copia il suo `gimbal.png` sopra il primo file della tabella.
+
 Programmi per disegnare a pixel (prezzi non verificati): Piskel (gratuito, nel browser), Pixelorama
 o LibreSprite (gratuiti), Aseprite (a pagamento), Blockbench (gratuito, mostra anche l'oggetto in
 mano). Salva sempre in PNG con la trasparenza, sopra il file indicato.

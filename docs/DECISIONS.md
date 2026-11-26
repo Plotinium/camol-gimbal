@@ -191,12 +191,14 @@ The menu edits what is in front of the player.
 ## D-20 - The name and look of the item
 
 The item is called Camol Gimbal. It shows a lilac blob like the one on Camol's items, squeezed at the
-waist by golden tongs: the camo caught and bent to the player's will. The author is redrawing the
-sprite by hand, so that it reads as a closed pair of tongs. The current file is a 32x32 drawing made
-for this mod; no Camol file is used. The mod page icon is the same drawing.
+waist by closed golden tongs: the camo caught and bent to the player's will. Grips, pivot and tip lie
+on one straight line, and only the jaw in front of the blob is drawn: the other one is behind it. It is
+a 32x32 drawing made for this mod; no Camol file is used. The mod page icon is the same drawing. The
+earlier versions are kept in `art/` as references for later changes; they are not part of the jar.
 
 - **Rejected:** a round sceptre with three colours; using Camol's texture; a 16x16 drawing made by
-  generator, too small for the face and the tongs.
+  generator, too small for the face and the tongs; a single rod holding an open ring, which does not
+  read as tongs; tongs showing both jaws, with grips and jaws pointing in different directions.
 
 ## D-22 - The use of generative AI is declared
 
