@@ -44,9 +44,10 @@ principalmente da contenuti generati da IA, anche se dichiarato. Sono ammessi qu
 in cui la persona ha contribuito "in modo primario e significativo"
 ([annuncio](https://modrinth.com/news/article/ai-policy-and-disclosures/)).
 
-- [ ] Prima di caricare, chiedi all'assistenza di Modrinth, descrivendo le cose come stanno (codice,
-      disegno e testi fatti da un'IA; tue idea, scelte e prove): se il tuo contributo conta come
-      primario, e se le foto del gioco con il disegno fatto da IA sono ammesse in galleria.
+- [ ] Prima di caricare, chiedi all'assistenza di Modrinth, descrivendo le cose come stanno (codice e
+      testi fatti da un'IA; disegno fatto da un'IA e ritoccato da te a mano; tue idea, scelte e prove):
+      se il tuo contributo conta come primario, e se icona e foto del gioco con quel disegno sono
+      ammesse.
 - [ ] Se la risposta è sì, o dopo che hai rifatto di tua mano ciò che serve:
   - icona e disegno dell'oggetto disegnati da te, senza partire da quelli attuali;
   - descrizione scritta da te (quella in `docs\publish\` è generata da IA e non si può usare);
