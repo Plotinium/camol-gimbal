@@ -197,6 +197,10 @@ the pivot, at the left side. It is a 32x32 drawing made for this mod; no Camol f
 page icon is the same drawing. It is an AI drawing that the author retouched by hand; it is kept with
 the earlier versions in `art/` (the one in use is `art/4-final`), which is not part of the jar.
 
+In first person the item is held like any tool. In third person it is turned over about the line of
+the tongs, with the grips in the same place: the blob sits on the other side of that line compared with
+a sword blade, so the standard tool pose shows it upside down.
+
 - **Rejected:** a round sceptre with three colours; using Camol's texture; a 16x16 drawing made by
   generator, too small for the face and the tongs; a single rod holding an open ring, which does not
   read as tongs; tongs showing both jaws whole, with grips and jaws pointing in different directions;

@@ -28,9 +28,12 @@ Se il gioco si chiude o una di queste righe compare, fermati e manda il registro
    Deve uscire un Gimbal. Il Camo Block è l'oggetto di Camol, con il nome inglese: Camol non ha la
    traduzione italiana.
 2. Guarda il Gimbal nella barra degli oggetti, nell'inventario e in mano: deve avere la sua
-   immagine (un esserino lilla stretto in vita da tenaglie dorate, su un manico di ferro), non il
-   cubo viola e nero dei file mancanti.
-3. Metti una camo su qualche blocco con un Camo Block riempito (Camo Block più un blocco nel banco
+   immagine (un esserino lilla stretto in vita da una pinza dorata con le impugnature marroni), non
+   il cubo viola e nero dei file mancanti.
+3. Passa in terza persona (F5): l'esserino sta dritto, con la goccia verso l'alto, e la pinza punta
+   in avanti con le impugnature in mano. Sposta il Gimbal nell'altra mano (F) e ricontrolla. In prima
+   persona si vede come nell'inventario, tenuto come un attrezzo.
+4. Metti una camo su qualche blocco con un Camo Block riempito (Camo Block più un blocco nel banco
    da lavoro, poi clic destro su un blocco).
 
 ### Trasparenza
