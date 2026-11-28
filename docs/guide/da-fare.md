@@ -1,13 +1,10 @@
 # Cosa devi fare tu
 
-Stato al 2026-11-26. Regole lette quel giorno; i percorsi dei pulsanti sui siti **non sono stati
-verificati**.
+Stato al 2026-11-28. Regole dei siti lette il 2026-11-26; i percorsi dei pulsanti sui siti **non sono
+stati verificati**.
 
-## 1. Disegno e prove
+## 1. Prove
 
-- [ ] Guarda in gioco il disegno del Camol Gimbal. Per ritoccarlo, file e programmi sono in
-      [sviluppo.md](sviluppo.md). Se in futuro vuoi Modrinth, parti da un foglio vuoto: un disegno
-      adattato da questi resta derivato da IA.
 - [ ] La parte "In ATM10" di [prove.md](prove.md).
 - [ ] Un server dedicato (sezione "Da provare su server"). In alternativa pubblica la 0.1.0 come beta,
       dicendo nella descrizione che non è provata su server.
